@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MD REMON TRADING BOT</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080d18;color:#e8f2ff;
+ font-family:Arial,sans-serif;
+}
+.app{max-width:480px;margin:auto;padding:14px}
+.top{
+ display:flex;justify-content:space-between;
+ align-items:center;padding:12px 4px;
+}
+.logo{color:#00e6a0;font-weight:bold;font-size:20px}
+.online{color:#00e6a0;font-size:12px}
+.card{
+ background:#111b2c;border:1px solid #263752;
+ border-radius:14px;padding:15px;margin:12px 0;
+}
+h2{font-size:17px;margin:5px 0 14px}
+h3{font-size:14px;color:#9eb4d2}
+select{
+ background:#182740;color:white;border:1px solid #385070;
+ padding:10px;border-radius:8px;width:100%;
+}
+.chart{
+ height:230px;position:relative;
+ background:#0b1422;border-radius:10px;
+ overflow:hidden;
+}
+canvas{width:100%;height:100%}
+.price{
+ display:flex;justify-content:space-between;
+ font-size:12px;color:#8ca7c9;margin-bottom:10px;
+}
+.intel{text-align:center}
+.intel h2{color:#e9f5ff;font-size:19px}
+.score{font-size:35px;color:#00e6a0;font-weight:bold}
+.meter{
+ height:7px;background:#263750;border-radius:8px;
+ overflow:hidden;margin:12px 0;
+}
+.meter span{
+ display:block;height:100%;width:72%;
+ background:linear-gradient(90deg,#00a878,#00e6a0);
+}
+.info{
+ display:flex;justify-content:space-between;
+ color:#9eb4d2;font-size:12px;padding:7px 0;
+ border-bottom:1px solid #26344a;
+}
+.timegrid{
+ display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+.time{
+ background:#182740;color:white;border:1px solid #385070;
+ border-radius:9px;padding:13px;font-weight:bold;
+}
+.time.active{border-color:#00e6a0;color:#00e6a0}
+.signal{text-align:center;padding:18px}
+.signal strong{font-size:30px;color:#00e6a0}
+.buttons{display:flex;gap:10px;margin-top:12px}
+.buttons button{
+ width:50%;padding:17px;border:0;border-radius:10px;
+ color:white;font-size:17px;font-weight:bold;
+}
+.buy{background:#00a86b}
+.sell{background:#e63850}
+.action{
+ width:100%;padding:13px;border:0;border-radius:9px;
+ background:#1765db;color:white;font-weight:bold;
+ font-size:15px;margin-top:10px;
+}
+.note{font-size:11px;color:#8ba1bd;text-align:center}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="top">
+ <div class="logo">✦ MD REMON BOT</div>
+ <div class="online">● DEMO ONLINE</div>
+</div>
+
+<div class="card">
+ <div class="price">
+  <span>MARKET ASSET</span>
+  <span>DEMO MARKET</span>
+ </div>
+ <select id="asset">
+  <option>ALGO X</option>
+  <option>EUR/USD</option>
+  <option>GBP/USD</option>
+  <option>BTC/USD</option>
+  <option>GOLD</option>
+ </select>
+</div>
+
+<div class="card">
+ <h2>LIVE CANDLE CHART</h2>
+ <div class="price">
+  <span id="pair">ALGO X</span>
+  <span id="price">1.08452</span>
+ </div>
+ <div class="chart">
+  <canvas id="chart"></canvas>
+ </div>
+ <div class="price">
+  <span>PRICE MOVEMENT</span>
+  <span>DEMO DATA</span>
+ </div>
+</div>
+
+<div class="card intel">
+ <h2>Neural Market Intelligence</h2>
+ <div class="score" id="score">72.5%</div>
+ <div class="meter"><span id="meter"></span></div>
+ <div class="info"><span>Market Strength</span><b>STRONG</b></div>
+ <div class="info"><span>Trend Analysis</span><b id="trend">BULLISH</b></div>
+ <div class="info"><span>Market Condition</span><b>DEMO</b></div>
+ <div class="info"><span>Signal Engine</span><b>READY</b></div>
+</div>
+
+<div class="card">
+ <h2>Trade Time Select</h2>
+ <div class="timegrid">
+  <button class="time active" onclick="setTime(5,this)">5 SEC</button>
+  <button class="time" onclick="setTime(15,this)">15 SEC</button>
+  <button class="time" onclick="setTime(30,this)">30 SEC</button>
+  <button class="time" onclick="setTime(60,this)">1 MIN</button>
+ </div>
+</div>
+
+<div class="card signal">
+ <h3>AI SIGNAL RESULT</h3>
+ <strong id="signal">WAIT</strong>
+ <p id="countdown">Select time and get demo signal</p>
+ <button class="action" onclick="getSignal()">GET SIGNAL</button>
+</div>
+
+<div class="card">
+ <h2>TRADE CONTROL</h2>
+ <div class="buttons">
+  <button class="buy" onclick="trade('BUY')">BUY ▲</button>
+  <button class="sell" onclick="trade('SELL')">SELL ▼</button>
+ </div>
+ <p id="tradeResult" class="note">Demo mode — no real trade executed</p>
+</div>
+
+<p class="note">
+MD REMON TRADING BOT<br>
+Demo interface only. Not connected to Quotex or live market data.
+Signals are random demonstrations, not financial advice.
+</p>
+
+</div>
+
+<script>
+let selectedTime=5;
+let timer=null;
+
+function setTime(t,el){
+ selectedTime=t;
+ document.querySelectorAll(".time").forEach(b=>b.classList.remove("active"));
+ el.classList.add("active");
+ document.getElementById("countdown").textContent=t+" seconds selected";
+}
+
+function getSignal(){
+ clearInterval(timer);
+ let result=Math.random()>.5?"CALL":"PUT";
+ document.getElementById("signal").textContent=result;
+ document.getElementById("signal").style.color=
+ result==="CALL"?"#00e6a0":"#ff526b";
+ let left=selectedTime;
+ document.getElementById("countdown").textContent=left+" SEC";
+ timer=setInterval(()=>{
+  left--;
+  document.getElementById("countdown").textContent=left+" SEC";
+  if(left<=0){
+   clearInterval(timer);
+   document.getElementById("countdown").textContent="Demo signal finished";
+  }
+ },1000);
+}
+
+function trade(type){
+ document.getElementById("tradeResult").textContent=
+ type+" selected — demo only, no real order placed.";
+}
+
+document.getElementById("asset").onchange=function(){
+ document.getElementById("pair").textContent=this.value;
+};
+
+// Draw demonstration candlestick chart
+const canvas=document.getElementById("chart");
+const ctx=canvas.getContext("2d");
+let candles=[];
+let value=100;
+
+for(let i=0;i<34;i++){
+ let open=value;
+ let close=open+(Math.random()-.48)*9;
+ let high=Math.max(open,close)+Math.random()*5;
+ let low=Math.min(open,close)-Math.random()*5;
+ candles.push({open,close,high,low});
+ value=close;
+}
+
+function draw(){
+ let w=canvas.clientWidth,h=canvas.clientHeight;
+ let dpr=window.devicePixelRatio||1;
+ canvas.width=w*dpr;canvas.height=h*dpr;
+ ctx.setTransform(dpr,0,0,dpr,0,0);
+ ctx.clearRect(0,0,w,h);
+
+ let min=Math.min(...candles.map(c=>c.low))-3;
+ let max=Math.max(...candles.map(c=>c.high))+3;
+ let y=v=>h-((v-min)/(max-min))*h;
+
+ for(let i=0;i<5;i++){
+  let yy=i*h/5;
+  ctx.strokeStyle="#1d2c40";
+  ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(w,yy);ctx.stroke();
+ }
+ let step=w/candles.length;
+ candles.forEach((c,i)=>{
+  let x=i*step+step/2;
+  let up=c.close>=c.open;
+  let color=up?"#00d69a":"#fa5269";
+  ctx.strokeStyle=color;
+  ctx.lineWidth=1.5;
+  ctx.beginPath();
+  ctx.moveTo(x,y(c.high));
+  ctx.lineTo(x,y(c.low));
+  ctx.stroke();
+  let top=Math.min(y(c.open),y(c.close));
+  let height=Math.max(2,Math.abs(y(c.open)-y(c.close)));
+  ctx.fillStyle=color;
+  ctx.fillRect(x-step*.28,top,step*.56,height);
+ });
+}
+draw();
+window.addEventListener("resize",draw);
+
+setInterval(()=>{
+ let last=candles[candles.length-1];
+ let open=last.close;
+ let close=open+(Math.random()-.48)*4;
+ candles.push({
+  open,close,
+  high:Math.max(open,close)+Math.random()*3,
+  low:Math.min(open,close)-Math.random()*3
+ });
+ if(candles.length>34)candles.shift();
+ draw();
+ document.getElementById("price").textContent=
+ (1.08+Math.random()*.01).toFixed(5);
+ let s=60+Math.random()*35;
+ document.getElementById("score").textContent=s.toFixed(1)+"%";
+ document.getElementById("meter").style.width=s+"%";
+ document.getElementById("trend").textContent=
+ Math.random()>.5?"BULLISH":"BEARISH";
+},2500);
+</script>
+</body>
+  </html>
