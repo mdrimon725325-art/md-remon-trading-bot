@@ -2,72 +2,218 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>MD REMON TRADING BOT</title>
 <style>
-body {
-  margin: 0;
-  padding: 20px;
-  background: #101827;
-  color: white;
-  font-family: Arial;
-  text-align: center;
-}
-.container {
-  max-width: 420px;
-  margin: 30px auto;
-  padding: 25px;
-  background: #1e293b;
-  border-radius: 18px;
-}
-h1 { color: #00e5a0; }
-button {
-  width: 100%;
-  padding: 15px;
-  margin: 10px 0;
-  border: 0;
-  border-radius: 10px;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-}
-.call { background: #08a66b; }
-.put { background: #e53950; }
-.signal { background: #2563eb; }
-#result {
-  margin-top: 20px;
-  padding: 20px;
-  background: #0f172a;
-  border-radius: 12px;
-  font-size: 22px;
-}
-small { color: #facc15; }
+*{box-sizing:border-box}
+body{margin:0;background:#090e19;color:#e8efff;font-family:Arial,sans-serif}
+.app{max-width:460px;margin:auto;min-height:100vh;padding:10px 12px 20px}
+header{height:43px;display:flex;justify-content:space-between;align-items:center}
+.brand{font-size:17px;font-weight:bold;color:#19e6a0}
+.online{font-size:10px;color:#19e6a0}
+.topline{display:flex;justify-content:space-between;align-items:center;margin:13px 0}
+.asset{background:#142137;color:#fff;border:1px solid #263d5b;border-radius:7px;padding:9px;width:48%;font-weight:bold}
+.price{color:#20e6a1;font-size:14px;font-weight:bold}
+.panel{background:#111b2c;border:1px solid #263750;border-radius:10px;padding:11px;margin:10px 0}
+.small{font-size:10px;color:#91a6c4}
+.charthead{display:flex;justify-content:space-between;margin-bottom:9px}
+.chartbox{height:245px;position:relative;background:#0a1423;border-radius:6px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+.charttools{display:flex;justify-content:space-between;color:#7188a8;font-size:10px;padding-top:9px}
+.intel{text-align:center;padding:12px 10px}
+.intel-title{font-size:15px;color:#e7f2ff;margin:3px 0 12px}
+.algo{font-size:12px;color:#a7b9d3;letter-spacing:2px}
+.signal{font-size:29px;font-weight:bold;color:#16e5a0;margin:6px}
+.airow{display:flex;justify-content:space-between;align-items:center;padding:8px 4px;border-bottom:1px solid #26354a;font-size:11px;color:#94a9c5}
+.airow b{color:#d9e6fa}
+.bars{height:32px;display:flex;gap:3px;align-items:end;justify-content:center;margin:12px auto}
+.bars i{display:block;width:5px;background:#08c995;border-radius:2px}
+.timer-title{text-align:center;font-size:12px;color:#9db1cc;margin:5px 0 12px}
+.times{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.time{border:1px solid #2b4567;background:#14233a;color:#dce9ff;border-radius:7px;padding:13px 5px;font-size:13px}
+.time.active{background:#123c3b;border-color:#00d99a;color:#00e6a0}
+.count{font-size:12px;color:#a9bdd8;text-align:center;margin:10px}
+.tradebuttons{display:flex;gap:8px}
+.tradebuttons button{width:50%;border:0;border-radius:7px;padding:16px 5px;font-size:16px;font-weight:bold;color:white}
+.buy{background:#08bd75}
+.sell{background:#e9435c}
+.get{width:100%;background:#1767d9;color:white;border:0;border-radius:7px;padding:13px;font-size:14px;font-weight:bold}
+.footer{text-align:center;font-size:9px;color:#667c9d;line-height:1.7;padding:10px}
 </style>
 </head>
 <body>
-<div class="container">
-<h1>MD REMON</h1>
-<h2>TRADING BOT</h2>
-<p>Trading Signal Demo</p>
+<div class="app">
 
-<button class="call" onclick="show('CALL')">CALL</button>
-<button class="put" onclick="show('PUT')">PUT</button>
-<button class="signal" onclick="randomSignal()">GET SIGNAL</button>
+<header>
+ <div class="brand">✦ MD REMON BOT</div>
+ <div class="online">● SYSTEM ONLINE</div>
+</header>
 
-<div id="result">Your Signal Will Appear Here</div>
-<p><small>Demo only — not real market predictions.</small></p>
+<div class="topline">
+ <select class="asset" id="asset">
+  <option>ALGO X</option>
+  <option>EUR/USD</option>
+  <option>GBP/USD</option>
+  <option>USD/JPY</option>
+  <option>BTC/USD</option>
+  <option>GOLD</option>
+ </select>
+ <div style="text-align:right">
+  <div class="small">DEMO PRICE</div>
+  <div class="price" id="price">1.08452</div>
+ </div>
+</div>
+
+<div class="panel">
+ <div class="charthead">
+  <span class="small">MARKET CHART</span>
+  <span class="small">● DEMO LIVE</span>
+ </div>
+ <div class="chartbox">
+  <canvas id="chart"></canvas>
+ </div>
+ <div class="charttools">
+  <span>15s　30s　1m　5m</span>
+  <span> CANDLESTICK</span>
+ </div>
+</div>
+
+<div class="panel intel">
+ <div class="algo">ALGO X • AI SYSTEM</div>
+ <div class="intel-title">Neural Market Intelligence</div>
+ <div class="small">MARKET ANALYSIS RESULT</div>
+ <div class="signal" id="aiSignal">WAITING</div>
+ <div class="bars" id="bars"></div>
+ <div class="airow"><span>Market Strength</span><b id="strength">STRONG</b></div>
+ <div class="airow"><span>Trend Direction</span><b id="trend">BULLISH</b></div>
+ <div class="airow"><span>AI Confidence</span><b id="confidence">86%</b></div>
+ <div class="airow"><span>Market Status</span><b>DEMO</b></div>
+</div>
+
+<div class="panel">
+ <div class="timer-title">TRADE TIME SELECT</div>
+ <div class="times">
+  <button class="time active" onclick="setTime(5,this)">5 SEC</button>
+  <button class="time" onclick="setTime(15,this)">15 SEC</button>
+  <button class="time" onclick="setTime(30,this)">30 SEC</button>
+  <button class="time" onclick="setTime(60,this)">1 MIN</button>
+ </div>
+ <div class="count" id="count">SELECT EXPIRY TIME</div>
+ <button class="get" onclick="generate()">GET SIGNAL</button>
+</div>
+
+<div class="panel">
+ <div class="timer-title">TRADE CONTROL</div>
+ <div class="tradebuttons">
+  <button class="buy" onclick="trade('BUY')">BUY ▲</button>
+  <button class="sell" onclick="trade('SELL')">SELL ▼</button>
+ </div>
+ <div class="count" id="tradeStatus">Waiting for selection</div>
+</div>
+
+<div class="footer">
+ MD REMON TRADING BOT<br>
+ DEMONSTRATION INTERFACE • SIMULATED MARKET DATA<br>
+ Not connected to Quotex or a live broker. Signals are random demos, not predictions.
+</div>
 </div>
 
 <script>
-function show(signal) {
-  document.getElementById("result").innerHTML =
-    "SIGNAL: " + signal;
+let expiry=5, interval=null;
+const canvas=document.getElementById("chart");
+const ctx=canvas.getContext("2d");
+let candles=[],price=100;
+
+for(let i=0;i<38;i++){
+ let o=price,c=o+(Math.random()-.48)*8;
+ candles.push({o,c,h:Math.max(o,c)+Math.random()*4,l:Math.min(o,c)-Math.random()*4});
+ price=c;
 }
-function randomSignal() {
-  let signals = ["CALL", "PUT"];
-  let result = signals[Math.floor(Math.random()*2)];
-  show(result);
+
+function draw(){
+ let w=canvas.clientWidth,h=canvas.clientHeight,d=window.devicePixelRatio||1;
+ canvas.width=w*d;canvas.height=h*d;ctx.setTransform(d,0,0,d,0,0);
+ ctx.clearRect(0,0,w,h);
+ let min=Math.min(...candles.map(c=>c.l))-3;
+ let max=Math.max(...candles.map(c=>c.h))+3;
+ let y=n=>h-((n-min)/(max-min))*h;
+ for(let j=0;j<6;j++){
+  ctx.strokeStyle="#1b2a40";ctx.lineWidth=.7;
+  ctx.beginPath();ctx.moveTo(0,j*h/6);ctx.lineTo(w,j*h/6);ctx.stroke();
+ }
+ let step=w/candles.length;
+ candles.forEach((c,i)=>{
+  let x=i*step+step/2;
+  let color=c.c>=c.o?"#00dc9b":"#fa526b";
+  ctx.strokeStyle=color;ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(x,y(c.h));ctx.lineTo(x,y(c.l));ctx.stroke();
+  ctx.fillStyle=color;
+  ctx.fillRect(x-step*.29,Math.min(y(c.o),y(c.c)),step*.58,Math.max(2,Math.abs(y(c.o)-y(c.c))));
+ });
 }
+draw();
+window.addEventListener("resize",draw);
+
+function updateMarket(){
+ let last=candles[candles.length-1],o=last.c;
+ let c=o+(Math.random()-.48)*4;
+ candles.push({o,c,h:Math.max(o,c)+Math.random()*3,l:Math.min(o,c)-Math.random()*3});
+ if(candles.length>38)candles.shift();
+ draw();
+ document.getElementById("price").textContent=(1.08+Math.random()*.01).toFixed(5);
+ let n=60+Math.random()*38;
+ document.getElementById("confidence").textContent=n.toFixed(0)+"%";
+ document.getElementById("strength").textContent=n>78?"STRONG":"MODERATE";
+ document.getElementById("trend").textContent=Math.random()>.5?"BULLISH":"BEARISH";
+}
+setInterval(updateMarket,1800);
+
+function makeBars(){
+ let el=document.getElementById("bars");
+ el.innerHTML="";
+ for(let i=0;i<22;i++){
+  let b=document.createElement("i");
+  b.style.height=(5+Math.random()*26)+"px";
+  el.appendChild(b);
+ }
+}
+makeBars();
+setInterval(makeBars,1800);
+
+function setTime(t,button){
+ expiry=t;
+ document.querySelectorAll(".time").forEach(x=>x.classList.remove("active"));
+ button.classList.add("active");
+ document.getElementById("count").textContent=t+" SECONDS SELECTED";
+}
+
+function generate(){
+ clearInterval(interval);
+ let result=Math.random()>.5?"CALL":"PUT";
+ let el=document.getElementById("aiSignal");
+ el.textContent=result;
+ el.style.color=result==="CALL"?"#00e6a0":"#fa526b";
+ let left=expiry;
+ document.getElementById("count").textContent=left+" SEC";
+ interval=setInterval(()=>{
+  left--;
+  document.getElementById("count").textContent=left+" SEC";
+  if(left<=0){
+   clearInterval(interval);
+   el.textContent="WAITING";
+   el.style.color="#facc15";
+   document.getElementById("count").textContent="SIGNAL EXPIRED";
+  }
+ },1000);
+}
+
+function trade(type){
+ document.getElementById("tradeStatus").textContent=
+ type+" SELECTED • DEMO ONLY • NO REAL ORDER";
+}
+document.getElementById("asset").onchange=function(){
+ document.querySelector(".algo").textContent=this.value+" • AI SYSTEM";
+};
 </script>
 </body>
-</html>
+                                                            </html>
