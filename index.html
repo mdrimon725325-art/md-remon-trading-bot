@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MD REMON TRADING BOT</title>
+<style>
+body {
+  margin: 0;
+  padding: 20px;
+  background: #101827;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+}
+.container {
+  max-width: 420px;
+  margin: 30px auto;
+  padding: 25px;
+  background: #1e293b;
+  border-radius: 18px;
+}
+h1 { color: #00e5a0; }
+button {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  border: 0;
+  border-radius: 10px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+.call { background: #08a66b; }
+.put { background: #e53950; }
+.signal { background: #2563eb; }
+#result {
+  margin-top: 20px;
+  padding: 20px;
+  background: #0f172a;
+  border-radius: 12px;
+  font-size: 22px;
+}
+small { color: #facc15; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>MD REMON</h1>
+<h2>TRADING BOT</h2>
+<p>Trading Signal Demo</p>
+
+<button class="call" onclick="show('CALL')">CALL</button>
+<button class="put" onclick="show('PUT')">PUT</button>
+<button class="signal" onclick="randomSignal()">GET SIGNAL</button>
+
+<div id="result">Your Signal Will Appear Here</div>
+<p><small>Demo only — not real market predictions.</small></p>
+</div>
+
+<script>
+function show(signal) {
+  document.getElementById("result").innerHTML =
+    "SIGNAL: " + signal;
+}
+function randomSignal() {
+  let signals = ["CALL", "PUT"];
+  let result = signals[Math.floor(Math.random()*2)];
+  show(result);
+}
+</script>
+</body>
+</html>
