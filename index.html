@@ -3,302 +3,267 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MD REMON TRADING BOT</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REMON TRADING BOT</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#07111f;color:#edf5ff;font-family:Arial,sans-serif}
-header{background:#0e1e31;text-align:center;padding:20px 10px;border-bottom:1px solid #24415e}
-header h1{margin:0;color:#35d6ff;font-size:23px}
-header p{color:#91a9c4;font-size:12px;margin:7px 0 0}
-.container{max-width:850px;margin:auto;padding:13px}
-.panel{background:#102137;border:1px solid #24415e;border-radius:13px;padding:15px;margin-bottom:13px}
-label{display:block;color:#a9bdd4;font-size:12px;margin-bottom:7px}
-input,select{width:100%;padding:13px;background:#081727;border:1px solid #34516d;border-radius:8px;color:white;font-size:15px;margin-bottom:12px}
-button{padding:13px;border:0;border-radius:9px;color:white;font-size:14px;font-weight:bold;cursor:pointer}
-.full{width:100%}
-.blue{background:#087da9}
-.green{background:#078553}
-.red{background:#b42e48}
-.dark{background:#203c58}
-#loginScreen{position:fixed;inset:0;z-index:1000;background:#07111f;display:flex;align-items:center;justify-content:center;padding:18px}
-.loginBox{width:100%;max-width:380px;background:#102137;border:1px solid #35d6ff;border-radius:16px;padding:24px;text-align:center;box-shadow:0 10px 40px #0008}
-.loginBox h2{color:#35d6ff;font-size:22px}
-.loginBox p{color:#9eb3ca;font-size:13px}
-#error{color:#ff637c;min-height:18px}
-.hidden{display:none!important}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.field{flex:1;min-width:140px}
-.tag{display:inline-block;background:#173c50;color:#65e1ff;border-radius:20px;padding:6px 10px;font-size:11px;margin:5px 0}
-#chart{display:block;width:100%;height:250px;background:#081727;border-radius:9px;margin-top:12px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
-.stat{background:#081727;border:1px solid #24415e;border-radius:9px;padding:10px;text-align:center}
-.stat small{display:block;color:#9eb3ca;font-size:11px}
-.stat b{display:block;margin-top:7px;font-size:15px}
-.signal{text-align:center;padding:14px 5px}
-#signalText{font-size:34px;font-weight:bold;margin:12px;color:#ffcf55}
-#confidence{font-size:13px;color:#a9bdd4}
-.times{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.times button{background:#203c58}
-.times button.active{background:#087da9;outline:1px solid #35d6ff}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.note{color:#a9bdd4;font-size:12px;line-height:1.6}
-footer{text-align:center;padding:15px;color:#718ba7;font-size:11px}
-@media(max-width:480px){
- header h1{font-size:20px}
- #chart{height:215px}
- .times{grid-template-columns:repeat(2,1fr)}
+body{
+ margin:0;padding:16px;background:#07111f;color:white;
+ font-family:Arial,sans-serif;
+}
+.wrap{max-width:480px;margin:25px auto}
+.card{
+ background:#102036;border:1px solid #29415e;
+ border-radius:20px;padding:22px;margin-bottom:18px;
+ box-shadow:0 12px 35px #0007;
+}
+.logo{
+ width:65px;height:65px;margin:auto;
+ display:grid;place-items:center;border-radius:18px;
+ background:linear-gradient(135deg,#f5d36b,#c58c25);
+ color:#111;font-size:32px;font-weight:bold;
+}
+h1{text-align:center;color:#f5d36b;font-size:23px}
+.sub{text-align:center;color:#9eb2ca;font-size:12px}
+label{display:block;margin:16px 0 7px;color:#aabbd0}
+input,select{
+ width:100%;padding:14px;border-radius:10px;
+ background:#091727;color:white;border:1px solid #29415e;
+ font-size:15px;
+}
+button{
+ width:100%;padding:15px;border:0;border-radius:11px;
+ font-weight:bold;font-size:15px;cursor:pointer;
+}
+.primary{
+ margin-top:18px;background:linear-gradient(90deg,#0cba78,#19e5a0);
+ color:#042317;
+}
+.logout{width:auto;background:#34465e;color:white;padding:10px}
+.hidden{display:none}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.market{
+ background:#091727;padding:14px;border-radius:12px;
+ margin:18px 0;border:1px solid #29415e;
+}
+.pill{color:#19d99a;font-size:11px}
+.signal{
+ background:#091727;border:1px solid #29415e;
+ border-radius:15px;text-align:center;padding:25px 10px;
+ margin:18px 0;
+}
+.signal strong{display:block;font-size:37px;margin:12px;color:#f5d36b}
+.muted{color:#9eb2ca;font-size:12px}
+.count{font-size:32px;color:#f5d36b;font-weight:bold}
+.notice{
+ background:#352d1c;border:1px solid #725d2d;
+ color:#f5d995;padding:12px;border-radius:10px;
+ font-size:12px;line-height:1.6;margin-top:15px;
 }
 </style>
 </head>
-<body>
 
-<div id="loginScreen">
- <div class="loginBox">
-  <h2>MD REMON TRADING BOT</h2>
-  <p>SECURE LOGIN</p>
-  <label style="text-align:left">MOBILE NUMBER / USER ID</label>
-  <input id="mobile" type="text" placeholder="Enter your number or User ID">
-  <label style="text-align:left">PASSWORD</label>
-  <input id="password" type="password" placeholder="Enter password">
-  <button class="blue full" onclick="login()">LOGIN NOW</button>
-  <p id="error"></p>
-  <p>Welcome to MD REMON BOT</p>
+<body>
+<div class="wrap">
+
+<!-- LOGIN PAGE -->
+<section class="card" id="login">
+ <div class="logo">R</div>
+ <h1>REMON TRADING BOT</h1>
+ <div class="sub">SMART SIGNAL DASHBOARD</div>
+
+ <label>Login ID</label>
+ <input id="uid" placeholder="Enter Login ID">
+
+ <label>Password</label>
+ <input id="pw" type="password" placeholder="Enter Password">
+
+ <button class="primary" onclick="loginNow()">LOGIN</button>
+ <p class="muted" id="error"></p>
+</section>
+
+<!-- MAIN DASHBOARD -->
+<section class="card hidden" id="dashboard">
+
+ <div class="top">
+  <div>
+   <div class="muted">WELCOME TO</div>
+   <h1>REMON TRADING BOT</h1>
+  </div>
+  <button class="logout" onclick="logoutNow()">LOGOUT</button>
  </div>
+
+ <div class="market">
+  <div class="top">
+   <b>Broker: Quotex</b>
+   <span class="pill">SIGNAL SIMULATOR</span>
+  </div>
+  <p class="muted">Live data connection: Not connected</p>
+ </div>
+
+ <label>MARKET TYPE</label>
+ <select id="marketType" onchange="loadMarkets()">
+  <option value="otc">OTC MARKETS</option>
+  <option value="regular">REGULAR MARKETS</option>
+ </select>
+
+ <label>SELECT MARKET</label>
+ <select id="asset"></select>
+
+ <label>TIME FRAME</label>
+ <select id="timeframe">
+  <option>5 Seconds</option>
+  <option>15 Seconds</option>
+  <option>30 Seconds</option>
+  <option>1 Minute</option>
+ </select>
+
+ <div class="signal">
+  <div class="muted" id="signalTitle">SIGNAL RESULT</div>
+  <strong id="signal">WAIT</strong>
+  <div class="muted" id="details">GET SIGNAL চাপুন</div>
+  <div class="count hidden" id="countdown"></div>
+ </div>
+
+ <button class="primary" id="signalBtn" onclick="getSignal()">
+  GET SIGNAL
+ </button>
+
+ <div class="notice">
+  এটি একটি Signal Simulator। API বা লাইভ মার্কেট ডেটা সংযুক্ত নেই।
+  CALL/PUT নমুনা হিসেবে তৈরি হয়; এগুলো বাস্তব বাজারের নিশ্চিত
+  সিগন্যাল বা লাভের নিশ্চয়তা নয়। এখানে কোনো বাস্তব ট্রেড করা হয় না।
+ </div>
+</section>
 </div>
 
-<header>
- <h1>MD REMON TRADING BOT</h1>
- <p>SMART MARKET SIGNAL DASHBOARD · DEMO</p>
-</header>
-
-<main id="dashboard" class="container hidden">
-
- <section class="panel">
-  <div class="row">
-   <div class="field">
-    <label>SELECT MARKET TYPE</label>
-    <select id="marketType">
-     <option value="ALL">ALL MARKETS</option>
-     <option value="REAL">REAL MARKET</option>
-     <option value="OTC">OTC MARKET</option>
-    </select>
-   </div>
-   <div class="field">
-    <label>SELECT MARKET</label>
-    <select id="market"></select>
-   </div>
-  </div>
-  <span class="tag" id="marketTag">REAL MARKET</span>
-  <b id="marketName">EUR/USD</b>
- </section>
-
- <section class="panel">
-  <div class="row" style="justify-content:space-between;align-items:center">
-   <b>MARKET CHART</b>
-   <span style="color:#f3bd52;font-size:11px">DEMO DATA</span>
-  </div>
-  <canvas id="chart"></canvas>
-  <div class="stats">
-   <div class="stat"><small>DEMO PRICE</small><b id="price">1.08450</b></div>
-   <div class="stat"><small>TREND</small><b id="trend">WAIT</b></div>
-   <div class="stat"><small>TIME</small><b id="frame">5 SEC</b></div>
-  </div>
- </section>
-
- <section class="panel">
-  <div class="signal">
-   <b>TRADING SIGNAL</b>
-   <div id="signalText">WAIT</div>
-   <div id="confidence">Press Generate Signal</div>
-   <p class="note">ডেমো সিগন্যাল — বাস্তব বাজারের পূর্বাভাস নয়।</p>
-   <button class="blue full" onclick="generateSignal()">GENERATE SIGNAL</button>
-  </div>
- </section>
-
- <section class="panel">
-  <label>SELECT TRADE TIME</label>
-  <div class="times">
-   <button class="active" data-time="5">5 SEC</button>
-   <button data-time="15">15 SEC</button>
-   <button data-time="30">30 SEC</button>
-   <button data-time="60">1 MIN</button>
-  </div>
- </section>
-
- <section class="panel">
-  <label>DEMO TRADE ACTIONS</label>
-  <div class="actions">
-   <button class="green" onclick="demoTrade('BUY / CALL')">BUY / CALL</button>
-   <button class="red" onclick="demoTrade('SELL / PUT')">SELL / PUT</button>
-  </div>
-  <p class="note" id="tradeMessage">কোনো ডেমো অ্যাকশন নেওয়া হয়নি।</p>
- </section>
-
- <section class="panel">
-  <b>BOT INFORMATION</b>
-  <p class="note" id="info">আপনার নির্বাচিত মার্কেটের ডেমো চার্ট।</p>
-  <p class="note">এই ওয়েবসাইট Quotex-এর সঙ্গে সংযুক্ত নয়। এখানে লাইভ দাম, প্রকৃত AI বিশ্লেষণ বা স্বয়ংক্রিয় ট্রেড নেই। কোনো Quotex পাসওয়ার্ড এখানে দেবেন না।</p>
-  <button class="dark full" onclick="logout()">LOG OUT</button>
- </section>
-</main>
-
-<footer>MD REMON TRADING BOT · DEMO PROJECT</footer>
-
 <script>
-/* DEMO LOGIN DETAILS */
-const LOGIN_ID = "01700000000";
-const LOGIN_PASSWORD = "123456";
+const LOGIN_ID = "7865432100";
+const LOGIN_PASS = "Remon@123";
 
-function login(){
- const id=document.getElementById("mobile").value.trim();
- const pass=document.getElementById("password").value;
- if(id===LOGIN_ID && pass===LOGIN_PASSWORD){
-  document.getElementById("loginScreen").classList.add("hidden");
+const markets = {
+ otc: [
+  "EUR/USD (OTC)",
+  "GBP/USD (OTC)",
+  "USD/JPY (OTC)",
+  "AUD/USD (OTC)",
+  "USD/CAD (OTC)",
+  "EUR/GBP (OTC)",
+  "NZD/USD (OTC)",
+  "GBP/JPY (OTC)"
+ ],
+ regular: [
+  "EUR/USD",
+  "GBP/USD",
+  "USD/JPY",
+  "AUD/USD",
+  "USD/CAD"
+ ]
+};
+
+let timer = null;
+let seconds = 10;
+
+function loginNow(){
+ const id = document.getElementById("uid").value.trim();
+ const pass = document.getElementById("pw").value;
+
+ if(id === LOGIN_ID && pass === LOGIN_PASS){
+  document.getElementById("login").classList.add("hidden");
   document.getElementById("dashboard").classList.remove("hidden");
-  document.getElementById("error").textContent="";
+  document.getElementById("error").textContent = "";
  }else{
-  document.getElementById("error").textContent="ভুল নম্বর অথবা পাসওয়ার্ড!";
+  document.getElementById("error").textContent =
+   "Login ID অথবা Password ভুল হয়েছে!";
  }
 }
-function logout(){
+
+function logoutNow(){
+ stopTimer();
  document.getElementById("dashboard").classList.add("hidden");
- document.getElementById("loginScreen").classList.remove("hidden");
- document.getElementById("password").value="";
+ document.getElementById("login").classList.remove("hidden");
+ document.getElementById("pw").value = "";
 }
 
-const markets=[
- ["EUR/USD","REAL"],["GBP/USD","REAL"],["USD/JPY","REAL"],
- ["AUD/USD","REAL"],["USD/CAD","REAL"],["EUR/GBP","REAL"],
- ["USD/CHF","REAL"],
- ["EUR/USD OTC","OTC"],["GBP/USD OTC","OTC"],
- ["USD/JPY OTC","OTC"],["AUD/USD OTC","OTC"],
- ["USD/CAD OTC","OTC"],["EUR/GBP OTC","OTC"],
- ["USD/BDT OTC","OTC"],["USD/PKR OTC","OTC"],
- ["USD/INR OTC","OTC"]
-];
+function loadMarkets(){
+ const type = document.getElementById("marketType").value;
+ const asset = document.getElementById("asset");
 
-const marketSelect=document.getElementById("market");
-const typeSelect=document.getElementById("marketType");
-const canvas=document.getElementById("chart");
-const ctx=canvas.getContext("2d");
-let selectedTime=5;
-let candles=[];
-let currentPrice=1.08450;
-let selectedMarket=markets[0];
-
-function basePrice(name){
- if(name.includes("JPY"))return 150.25;
- if(name.includes("BDT"))return 121.50;
- if(name.includes("PKR"))return 278.50;
- if(name.includes("INR"))return 83.50;
- if(name.includes("CHF"))return .89;
- if(name.includes("CAD"))return 1.36;
- if(name.includes("GBP"))return 1.27;
- if(name.includes("AUD"))return .66;
- if(name.includes("EUR/GBP"))return .85;
- return 1.08450;
-}
-function fillMarkets(){
- const filter=typeSelect.value;
- const previous=marketSelect.value;
- marketSelect.innerHTML="";
- markets.filter(m=>filter==="ALL"||m[1]===filter).forEach(m=>{
-  const o=document.createElement("option");
-  o.value=m[0];o.textContent=m[0]+" · "+m[1];
-  marketSelect.appendChild(o);
+ asset.innerHTML = "";
+ markets[type].forEach(name => {
+  const option = document.createElement("option");
+  option.textContent = name;
+  option.value = name;
+  asset.appendChild(option);
  });
- if([...marketSelect.options].some(o=>o.value===previous))
-  marketSelect.value=previous;
- updateMarket();
+ resetSignal();
 }
-function updateMarket(){
- selectedMarket=markets.find(m=>m[0]===marketSelect.value)||markets[0];
- document.getElementById("marketName").textContent=selectedMarket[0];
- document.getElementById("marketTag").textContent=selectedMarket[1]+" MARKET";
- document.getElementById("info").textContent="Selected: "+selectedMarket[0]+" — SIMULATED DEMO DATA";
- currentPrice=basePrice(selectedMarket[0]);
- makeCandles();drawChart();updatePrice();
- document.getElementById("signalText").textContent="WAIT";
- document.getElementById("signalText").style.color="#ffcf55";
- document.getElementById("confidence").textContent="Press Generate Signal";
- document.getElementById("trend").textContent="WAIT";
+
+function resetSignal(){
+ stopTimer();
+ document.getElementById("signal").textContent = "WAIT";
+ document.getElementById("signal").style.color = "#f5d36b";
+ document.getElementById("signalTitle").textContent = "SIGNAL RESULT";
+ document.getElementById("details").textContent = "GET SIGNAL চাপুন";
+ document.getElementById("signalBtn").disabled = false;
+ document.getElementById("signalBtn").textContent = "GET SIGNAL";
 }
-function makeCandles(){
- candles=[];
- let p=currentPrice;
- for(let i=0;i<38;i++){
-  let o=p;
-  let change=(Math.random()-.49)*(p>10?.15:.001);
-  let c=o+change;
-  candles.push({open:o,close:c,high:Math.max(o,c)+Math.random()*(p>10?.05:.0003),low:Math.min(o,c)-Math.random()*(p>10?.05:.0003)});
-  p=c;
+
+function stopTimer(){
+ if(timer !== null){
+  clearInterval(timer);
+  timer = null;
  }
- currentPrice=p;
+ document.getElementById("countdown").classList.add("hidden");
 }
-function drawChart(){
- const w=canvas.clientWidth,h=canvas.clientHeight;
- const d=window.devicePixelRatio||1;
- canvas.width=w*d;canvas.height=h*d;
- ctx.setTransform(d,0,0,d,0,0);
- ctx.clearRect(0,0,w,h);
- ctx.strokeStyle="#1c344a";
- for(let i=1;i<5;i++){
-  ctx.beginPath();ctx.moveTo(0,h*i/5);ctx.lineTo(w,h*i/5);ctx.stroke();
- }
- if(!candles.length)return;
- const vals=candles.flatMap(c=>[c.high,c.low]);
- const max=Math.max(...vals),min=Math.min(...vals),range=max-min||1;
- const y=v=>h-12-(v-min)/range*(h-24);
- const gap=w/candles.length;
- candles.forEach((c,i)=>{
-  const x=i*gap+gap/2;
-  const color=c.close>=c.open?"#19d68b":"#ff536c";
-  ctx.strokeStyle=color;ctx.fillStyle=color;
-  ctx.beginPath();ctx.moveTo(x,y(c.high));ctx.lineTo(x,y(c.low));ctx.stroke();
-  const top=y(Math.max(c.open,c.close));
-  const height=Math.max(2,y(Math.min(c.open,c.close))-top);
-  ctx.fillRect(x-gap*.28,top,gap*.56,height);
- });
+
+function getSignal(){
+ stopTimer();
+
+ seconds = 10;
+ const signal = document.getElementById("signal");
+ const count = document.getElementById("countdown");
+ const btn = document.getElementById("signalBtn");
+
+ btn.disabled = true;
+ btn.textContent = "PLEASE WAIT...";
+ signal.textContent = "ANALYZING";
+ signal.style.color = "#f5d36b";
+
+ document.getElementById("signalTitle").textContent = "ANALYZING SIGNAL";
+ document.getElementById("details").textContent =
+  document.getElementById("asset").value + " · " +
+  document.getElementById("timeframe").value;
+
+ count.classList.remove("hidden");
+ count.textContent = seconds + "s";
+
+ timer = setInterval(function(){
+  seconds--;
+  count.textContent = seconds + "s";
+
+  if(seconds <= 0){
+   stopTimer();
+
+   const result = Math.random() >= 0.5;
+   signal.textContent = result ? "CALL ↑" : "PUT ↓";
+   signal.style.color = result ? "#19d99a" : "#ff5c73";
+
+   document.getElementById("signalTitle").textContent =
+    "SIGNAL CONFIRMED";
+
+   document.getElementById("details").textContent =
+    document.getElementById("asset").value + " · " +
+    document.getElementById("timeframe").value +
+    " · SAMPLE RESULT";
+
+   btn.disabled = false;
+   btn.textContent = "GET NEW SIGNAL";
+  }
+ },1000);
 }
-function updatePrice(){
- document.getElementById("price").textContent=currentPrice.toFixed(5);
-}
-function addCandle(){
- if(!candles.length)return;
- const open=currentPrice;
- const close=open+(Math.random()-.49)*(currentPrice>10?.12:.0008);
- candles.push({open,close,high:Math.max(open,close)+(currentPrice>10?.04:.0002),low:Math.min(open,close)-(currentPrice>10?.04:.0002)});
- if(candles.length>38)candles.shift();
- currentPrice=close;
- document.getElementById("trend").textContent=close>=open?"UP":"DOWN";
- updatePrice();drawChart();
-}
-function generateSignal(){
- const call=Math.random()>=.5;
- const confidence=Math.floor(55+Math.random()*40);
- const el=document.getElementById("signalText");
- el.textContent=call?"CALL ↑":"PUT ↓";
- el.style.color=call?"#19d68b":"#ff536c";
- document.getElementById("confidence").textContent="Demo confidence: "+confidence+"%";
-}
-document.querySelectorAll("[data-time]").forEach(btn=>{
- btn.addEventListener("click",()=>{
-  selectedTime=Number(btn.dataset.time);
-  document.querySelectorAll("[data-time]").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  document.getElementById("frame").textContent=selectedTime===60?"1 MIN":selectedTime+" SEC";
- });
-});
-function demoTrade(action){
- document.getElementById("tradeMessage").textContent=
- "DEMO ONLY: "+action+" · "+selectedMarket[0]+" · "+selectedTime+" sec. Real trade হয়নি।";
-}
-marketSelect.addEventListener("change",updateMarket);
-typeSelect.addEventListener("change",fillMarkets);
-window.addEventListener("resize",drawChart);
-fillMarkets();
-setInterval(addCandle,1500);
+
+loadMarkets();
 </script>
 </body>
 </html>
