@@ -3,88 +3,132 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MD REMON TRADING BOT</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#07111f;color:#fff;font-family:Arial,sans-serif}
-.container{max-width:520px;margin:auto;padding:18px}
-.card{background:#101e30;border:1px solid #263b55;border-radius:16px;padding:20px;margin:15px 0}
-h1{text-align:center;color:#18e5a1;font-size:25px}
-h2{text-align:center;font-size:20px}
-p{color:#aabbd0;text-align:center}
-input,select,button{width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #344c68;background:#091626;color:white;font-size:16px}
-button{background:#08c98c;color:#001b15;font-weight:bold;border:0;cursor:pointer}
+body{
+ margin:0;color:#fff;font-family:Arial,sans-serif;
+ background:radial-gradient(ellipse at top,#26364b 0%,#101a2b 48%,#050912 100%);
+ min-height:100vh;overflow-x:hidden
+}
+body:before{
+ content:"🦁";position:fixed;z-index:-1;
+ font-size:250px;opacity:.075;
+ top:28%;left:50%;transform:translate(-50%,-50%);
+ filter:grayscale(.4);
+}
+.container{max-width:520px;margin:auto;padding:15px}
+header{text-align:center;padding:20px 5px}
+.logo{font-size:37px;filter:drop-shadow(0 0 12px #e7a63c)}
+h1{font-size:24px;color:#f4c56b;margin:8px 0}
+.subtitle{font-size:11px;letter-spacing:3px;color:#a9b9cc}
+.card{
+ background:rgba(14,26,43,.92);
+ border:1px solid #45536a;border-radius:18px;
+ padding:18px;margin:15px 0;
+ box-shadow:0 8px 25px #0007
+}
+h2{font-size:17px;color:#f4c56b;text-align:center;margin:5px 0 15px}
+input,button{
+ width:100%;padding:14px;margin:7px 0;border-radius:11px;
+ border:1px solid #45536a;background:#0a1422;color:white;font-size:15px
+}
+button{background:linear-gradient(90deg,#d99a35,#f4d17a);color:#211504;font-weight:bold;border:0;cursor:pointer}
 button:disabled{opacity:.5}
 .hidden{display:none}
-.market-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.market{padding:13px 7px;border:1px solid #344c68;border-radius:10px;background:#0b192a;text-align:center;font-size:13px;cursor:pointer}
-.market.selected{border:2px solid #12e5a0;background:#123b39}
-#timer{font-size:48px;text-align:center;color:#18e5a1;font-weight:bold;margin:15px}
-#signal{font-size:38px;text-align:center;font-weight:bold;padding:18px;border-radius:12px;background:#091626;margin:12px 0}
-.call{color:#16e69c}
-.put{color:#ff5268}
+.market-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.market{
+ padding:13px 6px;text-align:center;border-radius:11px;
+ background:#101f32;border:1px solid #354a63;
+ font-size:13px;cursor:pointer
+}
+.market.selected{border:2px solid #e9b64f;background:#3b3020;color:#ffdc8b}
+.duration-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.duration{
+ padding:12px 4px;text-align:center;border:1px solid #45536a;
+ border-radius:10px;background:#0a1422;font-size:13px;cursor:pointer
+}
+.duration.selected{background:#4a361b;border:2px solid #f2bd55;color:#ffdc8b}
+#timer{font-size:55px;text-align:center;color:#f4c56b;font-weight:bold;margin:15px}
+#signal{
+ font-size:36px;text-align:center;font-weight:bold;
+ padding:18px;border-radius:12px;background:#081321;margin:12px 0;
+ border:1px solid #45536a
+}
+.call{color:#20e6a1;text-shadow:0 0 15px #20e6a1}
+.put{color:#ff5268;text-shadow:0 0 15px #ff5268}
 .wait{color:#ffc857}
-.small{font-size:12px;color:#91a4ba;line-height:1.6}
-.status{text-align:center;color:#18e5a1;font-size:13px}
-footer{text-align:center;color:#71859c;font-size:12px;padding:20px}
+.info{text-align:center;color:#a9b9cc;font-size:13px}
+.small{font-size:11px;line-height:1.6;color:#9eafc4}
+footer{text-align:center;color:#71859c;font-size:11px;padding:20px}
 </style>
 </head>
 <body>
 <div class="container">
 
+<header>
+ <div class="logo">🦁</div>
+ <h1>MD REMON TRADING BOT</h1>
+ <div class="subtitle">SMART SIGNAL DASHBOARD</div>
+</header>
+
 <!-- LOGIN -->
 <div id="loginPage">
-  <h1>MD REMON TRADING BOT</h1>
-  <div class="card">
-    <h2>LOGIN ACCOUNT</h2>
-    <p>আপনার মোবাইল নম্বর ও পাসওয়ার্ড দিন</p>
-    <input id="mobile" type="tel" placeholder="Mobile Number / User ID">
-    <input id="password" type="password" placeholder="Password">
-    <button onclick="login()">LOGIN</button>
-    <p id="loginError" class="small"></p>
-  </div>
+ <div class="card">
+  <h2>🔐 LOGIN ACCOUNT</h2>
+  <p class="info">মোবাইল নম্বর এবং পাসওয়ার্ড দিন</p>
+  <input id="mobile" type="tel" placeholder="Mobile Number / User ID">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">LOGIN NOW</button>
+  <p id="loginError" class="small"></p>
+ </div>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
-  <h1>MD REMON TRADING BOT</h1>
-  <p class="status">SIGNAL DASHBOARD</p>
 
-  <div class="card">
-    <h2>SELECT MARKET</h2>
-    <div class="market-grid" id="marketGrid"></div>
-    <p id="selectedMarket">কোনো মার্কেট নির্বাচন করা হয়নি</p>
-  </div>
+ <div class="card">
+  <h2>📊 SELECT MARKET</h2>
+  <div class="market-grid" id="marketGrid"></div>
+  <p class="info" id="selectedMarket">কোনো মার্কেট নির্বাচন করা হয়নি</p>
+ </div>
 
-  <div class="card">
-    <h2>TRADE SIGNAL</h2>
-    <p>সিগন্যাল পেতে নিচের বাটনে চাপ দিন</p>
-    <button id="signalButton" onclick="startSignal()">GET SIGNAL</button>
-    <div id="timer">10</div>
-    <div id="signal" class="wait">WAIT</div>
-    <p id="signalMarket">Market: —</p>
-    <p id="signalTime">Time: —</p>
-  </div>
+ <div class="card">
+  <h2>⏱ SELECT TRADE TIME</h2>
+  <div class="duration-grid" id="durationGrid"></div>
+  <p class="info" id="selectedDuration">সময় নির্বাচন করুন</p>
+ </div>
 
-  <div class="card">
-    <h2>HOW TO USE</h2>
-    <p class="small">
-      ১. একটি মার্কেট নির্বাচন করুন।<br>
-      ২. GET SIGNAL বাটনে চাপ দিন।<br>
-      ৩. ১০ সেকেন্ড অপেক্ষা করুন।<br>
-      ৪. এরপর CALL / PUT / WAIT ফলাফল দেখুন।
-    </p>
-  </div>
+ <div class="card">
+  <h2>⚡ GET YOUR SIGNAL</h2>
+  <button id="signalButton" onclick="startSignal()">GET SIGNAL</button>
+  <div id="timer">10</div>
+  <div id="signal" class="wait">WAIT</div>
+  <p class="info" id="signalMarket">Market: —</p>
+  <p class="info" id="signalDuration">Trade Time: —</p>
+  <p class="info" id="signalTime">Time: —</p>
+ </div>
 
-  <button onclick="logout()" style="background:#293d55;color:white">LOGOUT</button>
+ <div class="card">
+  <h2>🦁 REMON BOT</h2>
+  <p class="small">
+   ১. একটি মার্কেট নির্বাচন করুন।<br>
+   ২. ট্রেডের সময় নির্বাচন করুন।<br>
+   ৩. GET SIGNAL চাপ দিন।<br>
+   ৪. ১০ সেকেন্ড অপেক্ষা করুন।<br>
+   ৫. ফলাফল দেখুন।
+  </p>
+ </div>
+
+ <button onclick="logout()">LOGOUT</button>
 </div>
 
-<footer>MD REMON TRADING BOT</footer>
+<footer>MD REMON TRADING BOT © 2026</footer>
 </div>
 
 <script>
-const markets = [
+const markets=[
 "EUR/USD","GBP/USD","USD/JPY","AUD/USD",
 "USD/CAD","EUR/GBP","USD/CHF",
 "EUR/USD OTC","GBP/USD OTC","USD/JPY OTC",
@@ -92,133 +136,138 @@ const markets = [
 "USD/BDT OTC","USD/PKR OTC","USD/INR OTC"
 ];
 
-let selected = "";
-let countdown = null;
-let busy = false;
+const durations=["5 Seconds","15 Seconds","30 Seconds","1 Minute","5 Minutes"];
+let selected="";
+let selectedTime="";
+let countdown=null;
+let busy=false;
 
 function login(){
-  const mobile = document.getElementById("mobile").value.trim();
-  const password = document.getElementById("password").value.trim();
-
-  if(!mobile || !password){
-    document.getElementById("loginError").textContent =
-      "মোবাইল নম্বর এবং পাসওয়ার্ড দুটোই লিখুন।";
-    return;
-  }
-
-  document.getElementById("loginPage").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
+ const mobile=document.getElementById("mobile").value.trim();
+ const password=document.getElementById("password").value.trim();
+ if(!mobile||!password){
+  document.getElementById("loginError").textContent=
+  "মোবাইল নম্বর ও পাসওয়ার্ড লিখুন।";
+  return;
+ }
+ document.getElementById("loginPage").classList.add("hidden");
+ document.getElementById("dashboard").classList.remove("hidden");
 }
 
 function logout(){
-  document.getElementById("dashboard").classList.add("hidden");
-  document.getElementById("loginPage").classList.remove("hidden");
-  document.getElementById("mobile").value = "";
-  document.getElementById("password").value = "";
-  selected = "";
-  document.querySelectorAll(".market").forEach(x=>x.classList.remove("selected"));
-  document.getElementById("selectedMarket").textContent =
-    "কোনো মার্কেট নির্বাচন করা হয়নি";
-  resetSignal();
+ resetSignal();
+ selected="";
+ selectedTime="";
+ document.getElementById("dashboard").classList.add("hidden");
+ document.getElementById("loginPage").classList.remove("hidden");
+ document.getElementById("mobile").value="";
+ document.getElementById("password").value="";
+ document.querySelectorAll(".market,.duration").forEach(x=>x.classList.remove("selected"));
+ document.getElementById("selectedMarket").textContent="কোনো মার্কেট নির্বাচন করা হয়নি";
+ document.getElementById("selectedDuration").textContent="সময় নির্বাচন করুন";
 }
 
 function createMarkets(){
-  const grid = document.getElementById("marketGrid");
+ const grid=document.getElementById("marketGrid");
+ markets.forEach(name=>{
+  const item=document.createElement("div");
+  item.className="market";
+  item.textContent=name;
+  item.onclick=()=>{
+   if(busy)return;
+   selected=name;
+   document.querySelectorAll(".market").forEach(x=>x.classList.remove("selected"));
+   item.classList.add("selected");
+   document.getElementById("selectedMarket").textContent="Selected: "+name;
+   document.getElementById("signalMarket").textContent="Market: "+name;
+  };
+  grid.appendChild(item);
+ });
+}
 
-  markets.forEach(market=>{
-    const item = document.createElement("div");
-    item.className = "market";
-    item.textContent = market;
-
-    item.onclick = ()=>{
-      if(busy) return;
-
-      selected = market;
-      document.querySelectorAll(".market").forEach(x=>{
-        x.classList.remove("selected");
-      });
-
-      item.classList.add("selected");
-      document.getElementById("selectedMarket").textContent =
-        "Selected: " + market;
-      document.getElementById("signalMarket").textContent =
-        "Market: " + market;
-      document.getElementById("signal").textContent = "READY";
-      document.getElementById("signal").className = "wait";
-    };
-
-    grid.appendChild(item);
-  });
+function createDurations(){
+ const grid=document.getElementById("durationGrid");
+ durations.forEach(time=>{
+  const item=document.createElement("div");
+  item.className="duration";
+  item.textContent=time;
+  item.onclick=()=>{
+   if(busy)return;
+   selectedTime=time;
+   document.querySelectorAll(".duration").forEach(x=>x.classList.remove("selected"));
+   item.classList.add("selected");
+   document.getElementById("selectedDuration").textContent="Selected: "+time;
+   document.getElementById("signalDuration").textContent="Trade Time: "+time;
+  };
+  grid.appendChild(item);
+ });
 }
 
 function startSignal(){
-  if(busy) return;
+ if(busy)return;
+ if(!selected){
+  alert("আগে একটি মার্কেট নির্বাচন করুন।");
+  return;
+ }
+ if(!selectedTime){
+  alert("আগে ট্রেডের সময় নির্বাচন করুন।");
+  return;
+ }
 
-  if(!selected){
-    alert("আগে একটি মার্কেট নির্বাচন করুন।");
-    return;
+ busy=true;
+ let seconds=10;
+ const button=document.getElementById("signalButton");
+ const timer=document.getElementById("timer");
+ const signal=document.getElementById("signal");
+
+ button.disabled=true;
+ button.textContent="ANALYZING...";
+ signal.textContent="ANALYZING...";
+ signal.className="wait";
+ timer.textContent=seconds;
+
+ countdown=setInterval(()=>{
+  seconds--;
+  timer.textContent=seconds;
+  if(seconds<=0){
+   clearInterval(countdown);
+   countdown=null;
+   showSignal();
   }
-
-  busy = true;
-  let seconds = 10;
-
-  const button = document.getElementById("signalButton");
-  const timer = document.getElementById("timer");
-  const signal = document.getElementById("signal");
-
-  button.disabled = true;
-  button.textContent = "ANALYZING...";
-  signal.textContent = "ANALYZING...";
-  signal.className = "wait";
-  timer.textContent = seconds;
-
-  countdown = setInterval(()=>{
-    seconds--;
-    timer.textContent = seconds;
-
-    if(seconds <= 0){
-      clearInterval(countdown);
-      countdown = null;
-      showSignal();
-    }
-  },1000);
+ },1000);
 }
 
 function showSignal(){
-  const results = ["CALL","PUT","WAIT"];
-  const result = results[Math.floor(Math.random()*results.length)];
+ // পরীক্ষামূলক র‍্যান্ডম ফলাফল; লাইভ মার্কেট বিশ্লেষণ নয়
+ const results=["CALL","PUT","WAIT"];
+ const result=results[Math.floor(Math.random()*results.length)];
+ const signal=document.getElementById("signal");
 
-  const signal = document.getElementById("signal");
-  signal.textContent = result;
-  signal.className = result.toLowerCase();
+ signal.textContent=result;
+ signal.className=result.toLowerCase();
+ document.getElementById("timer").textContent="00";
+ document.getElementById("signalMarket").textContent="Market: "+selected;
+ document.getElementById("signalDuration").textContent="Trade Time: "+selectedTime;
+ document.getElementById("signalTime").textContent="Time: "+new Date().toLocaleTimeString();
 
-  document.getElementById("timer").textContent = "00";
-  document.getElementById("signalMarket").textContent =
-    "Market: " + selected;
-  document.getElementById("signalTime").textContent =
-    "Time: " + new Date().toLocaleTimeString();
-
-  document.getElementById("signalButton").disabled = false;
-  document.getElementById("signalButton").textContent = "GET NEW SIGNAL";
-  busy = false;
+ document.getElementById("signalButton").disabled=false;
+ document.getElementById("signalButton").textContent="GET NEW SIGNAL";
+ busy=false;
 }
 
 function resetSignal(){
-  if(countdown){
-    clearInterval(countdown);
-    countdown = null;
-  }
-
-  busy = false;
-  document.getElementById("timer").textContent = "10";
-  document.getElementById("signal").textContent = "WAIT";
-  document.getElementById("signal").className = "wait";
-  document.getElementById("signalButton").disabled = false;
-  document.getElementById("signalButton").textContent = "GET SIGNAL";
-  document.getElementById("signalTime").textContent = "Time: —";
+ if(countdown){clearInterval(countdown);countdown=null;}
+ busy=false;
+ document.getElementById("timer").textContent="10";
+ document.getElementById("signal").textContent="WAIT";
+ document.getElementById("signal").className="wait";
+ document.getElementById("signalButton").disabled=false;
+ document.getElementById("signalButton").textContent="GET SIGNAL";
+ document.getElementById("signalTime").textContent="Time: —";
 }
 
 createMarkets();
+createDurations();
 </script>
 </body>
 </html>
