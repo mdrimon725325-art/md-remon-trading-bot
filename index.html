@@ -1,292 +1,224 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MD REMON TRADING BOT</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#07111f;color:#eaf2ff;font-family:Arial,sans-serif}
-header{padding:18px 14px;text-align:center;background:#0d1b2d;border-bottom:1px solid #203651}
-header h1{margin:0;color:#35d6ff;font-size:23px;letter-spacing:1px}
-header p{margin:7px 0 0;color:#91a9c4;font-size:12px}
-.container{max-width:850px;margin:auto;padding:14px}
-.panel{background:#101f32;border:1px solid #203a56;border-radius:13px;padding:15px;margin-bottom:14px}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.field{flex:1;min-width:145px}
-label{display:block;font-size:12px;color:#a9bdd4;margin-bottom:7px}
-select,button{width:100%;border:1px solid #294661;border-radius:9px;padding:12px;background:#091727;color:#fff;font-size:14px}
-button{cursor:pointer;font-weight:bold}
-button:active{transform:scale(.98)}
-.market-tag{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;background:#173c50;color:#65e1ff;margin-bottom:10px}
-.chart-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.chart-head strong{font-size:16px}
-#chart{width:100%;height:260px;display:block;background:#091522;border-radius:10px;margin-top:12px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}
-.stat{background:#091727;border:1px solid #203a56;border-radius:9px;padding:11px;text-align:center}
-.stat small{display:block;color:#91a9c4;font-size:11px}
-.stat b{display:block;margin-top:7px;font-size:17px}
-.signal{text-align:center;padding:18px 10px}
-.signal small{color:#9eb3ca}
-#signalText{font-size:30px;font-weight:900;margin:10px 0;color:#ffcf55}
-#confidence{font-size:14px;color:#b6c9dc}
-.time-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.time-buttons button.active{background:#087caa;border-color:#25d6ff}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.call{background:#087d50;border-color:#13bd79}
-.put{background:#a72b42;border-color:#f04d69}
-.demo{background:#17304a}
-.notice{font-size:12px;line-height:1.6;color:#a9bdd4}
-footer{text-align:center;color:#718ba7;font-size:11px;padding:18px}
-@media(max-width:480px){
- header h1{font-size:20px}
- #chart{height:220px}
- .stats{grid-template-columns:repeat(3,1fr)}
- .stat{padding:9px 5px}
- .stat b{font-size:14px}
- .time-buttons{grid-template-columns:repeat(2,1fr)}
-}
+body{margin:0;background:#07111f;color:#fff;font-family:Arial,sans-serif}
+.container{max-width:520px;margin:auto;padding:18px}
+.card{background:#101e30;border:1px solid #263b55;border-radius:16px;padding:20px;margin:15px 0}
+h1{text-align:center;color:#18e5a1;font-size:25px}
+h2{text-align:center;font-size:20px}
+p{color:#aabbd0;text-align:center}
+input,select,button{width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #344c68;background:#091626;color:white;font-size:16px}
+button{background:#08c98c;color:#001b15;font-weight:bold;border:0;cursor:pointer}
+button:disabled{opacity:.5}
+.hidden{display:none}
+.market-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.market{padding:13px 7px;border:1px solid #344c68;border-radius:10px;background:#0b192a;text-align:center;font-size:13px;cursor:pointer}
+.market.selected{border:2px solid #12e5a0;background:#123b39}
+#timer{font-size:48px;text-align:center;color:#18e5a1;font-weight:bold;margin:15px}
+#signal{font-size:38px;text-align:center;font-weight:bold;padding:18px;border-radius:12px;background:#091626;margin:12px 0}
+.call{color:#16e69c}
+.put{color:#ff5268}
+.wait{color:#ffc857}
+.small{font-size:12px;color:#91a4ba;line-height:1.6}
+.status{text-align:center;color:#18e5a1;font-size:13px}
+footer{text-align:center;color:#71859c;font-size:12px;padding:20px}
 </style>
 </head>
 <body>
-<header>
+<div class="container">
+
+<!-- LOGIN -->
+<div id="loginPage">
   <h1>MD REMON TRADING BOT</h1>
-  <p>SMART MARKET DASHBOARD · DEMO VERSION</p>
-</header>
+  <div class="card">
+    <h2>LOGIN ACCOUNT</h2>
+    <p>আপনার মোবাইল নম্বর ও পাসওয়ার্ড দিন</p>
+    <input id="mobile" type="tel" placeholder="Mobile Number / User ID">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">LOGIN</button>
+    <p id="loginError" class="small"></p>
+  </div>
+</div>
 
-<main class="container">
-  <section class="panel">
-    <div class="row">
-      <div class="field">
-        <label>SELECT MARKET</label>
-        <select id="marketSelect"></select>
-      </div>
-      <div class="field">
-        <label>MARKET TYPE</label>
-        <select id="typeSelect">
-          <option value="ALL">ALL MARKETS</option>
-          <option value="REAL">REAL MARKET</option>
-          <option value="OTC">OTC MARKET</option>
-        </select>
-      </div>
-    </div>
-    <div style="margin-top:13px">
-      <span class="market-tag" id="marketTag">REAL MARKET</span>
-      <strong id="marketName">EUR/USD</strong>
-    </div>
-  </section>
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+  <h1>MD REMON TRADING BOT</h1>
+  <p class="status">SIGNAL DASHBOARD</p>
 
-  <section class="panel">
-    <div class="chart-head">
-      <strong>LIVE STYLE CHART</strong>
-      <span style="font-size:11px;color:#f5bd55">SIMULATED DATA</span>
-    </div>
-    <canvas id="chart"></canvas>
-    <div class="stats">
-      <div class="stat"><small>DEMO PRICE</small><b id="price">1.08450</b></div>
-      <div class="stat"><small>MARKET TREND</small><b id="trend">WAIT</b></div>
-      <div class="stat"><small>TIME FRAME</small><b id="frameLabel">5 SEC</b></div>
-    </div>
-  </section>
+  <div class="card">
+    <h2>SELECT MARKET</h2>
+    <div class="market-grid" id="marketGrid"></div>
+    <p id="selectedMarket">কোনো মার্কেট নির্বাচন করা হয়নি</p>
+  </div>
 
-  <section class="panel">
-    <div class="signal">
-      <small>AI SIGNAL (DEMO ONLY)</small>
-      <div id="signalText">WAIT</div>
-      <div id="confidence">Signal confidence: --</div>
-      <p class="notice">এটি পরীক্ষামূলক সিগন্যাল; বাস্তব বাজার বিশ্লেষণ নয়।</p>
-      <button class="demo" id="generateBtn">GENERATE DEMO SIGNAL</button>
-    </div>
-  </section>
+  <div class="card">
+    <h2>TRADE SIGNAL</h2>
+    <p>সিগন্যাল পেতে নিচের বাটনে চাপ দিন</p>
+    <button id="signalButton" onclick="startSignal()">GET SIGNAL</button>
+    <div id="timer">10</div>
+    <div id="signal" class="wait">WAIT</div>
+    <p id="signalMarket">Market: —</p>
+    <p id="signalTime">Time: —</p>
+  </div>
 
-  <section class="panel">
-    <label>SELECT TIME</label>
-    <div class="time-buttons">
-      <button class="active" data-time="5">5 SEC</button>
-      <button data-time="15">15 SEC</button>
-      <button data-time="30">30 SEC</button>
-      <button data-time="60">1 MIN</button>
-    </div>
-  </section>
+  <div class="card">
+    <h2>HOW TO USE</h2>
+    <p class="small">
+      ১. একটি মার্কেট নির্বাচন করুন।<br>
+      ২. GET SIGNAL বাটনে চাপ দিন।<br>
+      ৩. ১০ সেকেন্ড অপেক্ষা করুন।<br>
+      ৪. এরপর CALL / PUT / WAIT ফলাফল দেখুন।
+    </p>
+  </div>
 
-  <section class="panel">
-    <label>DEMO TRADE BUTTONS — REAL TRADE হবে না</label>
-    <div class="actions">
-      <button class="call" id="buyBtn">BUY / CALL</button>
-      <button class="put" id="sellBtn">SELL / PUT</button>
-    </div>
-    <p id="tradeMessage" class="notice" style="text-align:center;margin-bottom:0">কোনো ট্রেড চালু নেই।</p>
-  </section>
+  <button onclick="logout()" style="background:#293d55;color:white">LOGOUT</button>
+</div>
 
-  <section class="panel">
-    <strong>MARKET INFORMATION</strong>
-    <p class="notice" id="marketInfo">নির্বাচিত মার্কেট: EUR/USD</p>
-    <p class="notice">এই ওয়েব ডেমো Quotex-এর সঙ্গে সংযুক্ত নয়। এখানে দেখানো দাম, চার্ট ও সিগন্যাল কৃত্রিমভাবে তৈরি হয়। কোনো লগইন, পাসওয়ার্ড বা Quotex অ্যাকাউন্টের তথ্য এখানে দেবেন না।</p>
-  </section>
-</main>
-
-<footer>MD REMON TRADING BOT · DEMO PROJECT</footer>
+<footer>MD REMON TRADING BOT</footer>
+</div>
 
 <script>
 const markets = [
-  {name:"EUR/USD",type:"REAL"},
-  {name:"GBP/USD",type:"REAL"},
-  {name:"USD/JPY",type:"REAL"},
-  {name:"AUD/USD",type:"REAL"},
-  {name:"USD/CAD",type:"REAL"},
-  {name:"EUR/GBP",type:"REAL"},
-  {name:"USD/CHF",type:"REAL"},
-  {name:"EUR/USD OTC",type:"OTC"},
-  {name:"GBP/USD OTC",type:"OTC"},
-  {name:"USD/JPY OTC",type:"OTC"},
-  {name:"AUD/USD OTC",type:"OTC"},
-  {name:"USD/CAD OTC",type:"OTC"},
-  {name:"EUR/GBP OTC",type:"OTC"},
-  {name:"USD/BDT OTC",type:"OTC"},
-  {name:"USD/PKR OTC",type:"OTC"},
-  {name:"USD/INR OTC",type:"OTC"}
+"EUR/USD","GBP/USD","USD/JPY","AUD/USD",
+"USD/CAD","EUR/GBP","USD/CHF",
+"EUR/USD OTC","GBP/USD OTC","USD/JPY OTC",
+"AUD/USD OTC","USD/CAD OTC","EUR/GBP OTC",
+"USD/BDT OTC","USD/PKR OTC","USD/INR OTC"
 ];
 
-const marketSelect=document.getElementById("marketSelect");
-const typeSelect=document.getElementById("typeSelect");
-const canvas=document.getElementById("chart");
-const ctx=canvas.getContext("2d");
-let selectedTime=5;
-let candles=[];
-let currentPrice=1.08450;
-let currentMarket=markets[0];
+let selected = "";
+let countdown = null;
+let busy = false;
 
-function fillMarkets(){
-  const filter=typeSelect.value;
-  const previous=marketSelect.value;
-  marketSelect.innerHTML="";
-  markets.filter(m=>filter==="ALL"||m.type===filter).forEach(m=>{
-    const option=document.createElement("option");
-    option.value=m.name;
-    option.textContent=m.name+" · "+m.type;
-    marketSelect.appendChild(option);
-  });
-  if([...marketSelect.options].some(o=>o.value===previous)){
-    marketSelect.value=previous;
+function login(){
+  const mobile = document.getElementById("mobile").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if(!mobile || !password){
+    document.getElementById("loginError").textContent =
+      "মোবাইল নম্বর এবং পাসওয়ার্ড দুটোই লিখুন।";
+    return;
   }
-  updateMarket();
+
+  document.getElementById("loginPage").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
 }
 
-function updateMarket(){
-  currentMarket=markets.find(m=>m.name===marketSelect.value)||markets[0];
-  document.getElementById("marketName").textContent=currentMarket.name;
-  document.getElementById("marketTag").textContent=currentMarket.type+" MARKET";
-  document.getElementById("marketInfo").textContent=
-    "নির্বাচিত মার্কেট: "+currentMarket.name+" ("+currentMarket.type+") — DEMO DATA";
-  currentPrice=currentMarket.name.includes("JPY")?150.250:
-    currentMarket.name.includes("BDT")?121.50:
-    currentMarket.name.includes("PKR")?278.50:
-    currentMarket.name.includes("INR")?83.50:1.08450;
-  makeCandles();
-  drawChart();
-  document.getElementById("price").textContent=currentPrice.toFixed(5);
-  document.getElementById("signalText").textContent="WAIT";
-  document.getElementById("confidence").textContent="Signal confidence: --";
-  document.getElementById("trend").textContent="WAIT";
-  document.getElementById("tradeMessage").textContent="নতুন মার্কেট নির্বাচন করা হয়েছে।";
+function logout(){
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("loginPage").classList.remove("hidden");
+  document.getElementById("mobile").value = "";
+  document.getElementById("password").value = "";
+  selected = "";
+  document.querySelectorAll(".market").forEach(x=>x.classList.remove("selected"));
+  document.getElementById("selectedMarket").textContent =
+    "কোনো মার্কেট নির্বাচন করা হয়নি";
+  resetSignal();
 }
 
-function makeCandles(){
-  candles=[];
-  let p=currentPrice;
-  for(let i=0;i<38;i++){
-    const open=p;
-    const close=open+(Math.random()-.48)*(currentMarket.name.includes("JPY")?.16:.0012);
-    const high=Math.max(open,close)+Math.random()*(currentMarket.name.includes("JPY")?.08:.0005);
-    const low=Math.min(open,close)-Math.random()*(currentMarket.name.includes("JPY")?.08:.0005);
-    candles.push({open,close,high,low});
-    p=close;
+function createMarkets(){
+  const grid = document.getElementById("marketGrid");
+
+  markets.forEach(market=>{
+    const item = document.createElement("div");
+    item.className = "market";
+    item.textContent = market;
+
+    item.onclick = ()=>{
+      if(busy) return;
+
+      selected = market;
+      document.querySelectorAll(".market").forEach(x=>{
+        x.classList.remove("selected");
+      });
+
+      item.classList.add("selected");
+      document.getElementById("selectedMarket").textContent =
+        "Selected: " + market;
+      document.getElementById("signalMarket").textContent =
+        "Market: " + market;
+      document.getElementById("signal").textContent = "READY";
+      document.getElementById("signal").className = "wait";
+    };
+
+    grid.appendChild(item);
+  });
+}
+
+function startSignal(){
+  if(busy) return;
+
+  if(!selected){
+    alert("আগে একটি মার্কেট নির্বাচন করুন।");
+    return;
   }
-  currentPrice=p;
+
+  busy = true;
+  let seconds = 10;
+
+  const button = document.getElementById("signalButton");
+  const timer = document.getElementById("timer");
+  const signal = document.getElementById("signal");
+
+  button.disabled = true;
+  button.textContent = "ANALYZING...";
+  signal.textContent = "ANALYZING...";
+  signal.className = "wait";
+  timer.textContent = seconds;
+
+  countdown = setInterval(()=>{
+    seconds--;
+    timer.textContent = seconds;
+
+    if(seconds <= 0){
+      clearInterval(countdown);
+      countdown = null;
+      showSignal();
+    }
+  },1000);
 }
 
-function drawChart(){
-  const w=canvas.clientWidth;
-  const h=canvas.clientHeight;
-  const ratio=window.devicePixelRatio||1;
-  canvas.width=w*ratio;
-  canvas.height=h*ratio;
-  ctx.setTransform(ratio,0,0,ratio,0,0);
-  ctx.clearRect(0,0,w,h);
-  ctx.strokeStyle="#1a3045";
-  ctx.lineWidth=1;
-  for(let i=1;i<5;i++){
-    const y=h*i/5;
-    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();
+function showSignal(){
+  const results = ["CALL","PUT","WAIT"];
+  const result = results[Math.floor(Math.random()*results.length)];
+
+  const signal = document.getElementById("signal");
+  signal.textContent = result;
+  signal.className = result.toLowerCase();
+
+  document.getElementById("timer").textContent = "00";
+  document.getElementById("signalMarket").textContent =
+    "Market: " + selected;
+  document.getElementById("signalTime").textContent =
+    "Time: " + new Date().toLocaleTimeString();
+
+  document.getElementById("signalButton").disabled = false;
+  document.getElementById("signalButton").textContent = "GET NEW SIGNAL";
+  busy = false;
+}
+
+function resetSignal(){
+  if(countdown){
+    clearInterval(countdown);
+    countdown = null;
   }
-  const values=candles.flatMap(c=>[c.high,c.low]);
-  const max=Math.max(...values),min=Math.min(...values);
-  const range=max-min||1;
-  const yPos=v=>h-12-((v-min)/range)*(h-24);
-  const gap=w/candles.length;
-  candles.forEach((c,i)=>{
-    const x=i*gap+gap/2;
-    const up=c.close>=c.open;
-    const color=up?"#19d68b":"#ff536c";
-    ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.moveTo(x,yPos(c.high));ctx.lineTo(x,yPos(c.low));ctx.stroke();
-    const top=yPos(Math.max(c.open,c.close));
-    const bottom=yPos(Math.min(c.open,c.close));
-    const body=Math.max(2,bottom-top);
-    ctx.fillRect(x-gap*.29,top,gap*.58,body);
-  });
+
+  busy = false;
+  document.getElementById("timer").textContent = "10";
+  document.getElementById("signal").textContent = "WAIT";
+  document.getElementById("signal").className = "wait";
+  document.getElementById("signalButton").disabled = false;
+  document.getElementById("signalButton").textContent = "GET SIGNAL";
+  document.getElementById("signalTime").textContent = "Time: —";
 }
 
-function addCandle(){
-  const open=currentPrice;
-  const movement=(Math.random()-.49)*(currentMarket.name.includes("JPY")?.12:.0009);
-  const close=open+movement;
-  candles.push({
-    open,close,
-    high:Math.max(open,close)+Math.random()*(currentMarket.name.includes("JPY")?.05:.0003),
-    low:Math.min(open,close)-Math.random()*(currentMarket.name.includes("JPY")?.05:.0003)
-  });
-  if(candles.length>38)candles.shift();
-  currentPrice=close;
-  document.getElementById("price").textContent=currentPrice.toFixed(5);
-  document.getElementById("trend").textContent=close>=open?"UP":"DOWN";
-  drawChart();
-}
-
-function generateSignal(){
-  const isCall=Math.random()>=.5;
-  const confidence=Math.floor(55+Math.random()*40);
-  document.getElementById("signalText").textContent=isCall?"CALL ↑":"PUT ↓";
-  document.getElementById("signalText").style.color=isCall?"#19d68b":"#ff536c";
-  document.getElementById("confidence").textContent="Demo confidence: "+confidence+"%";
-}
-
-typeSelect.addEventListener("change",fillMarkets);
-marketSelect.addEventListener("change",updateMarket);
-document.getElementById("generateBtn").addEventListener("click",generateSignal);
-
-document.querySelectorAll("[data-time]").forEach(button=>{
-  button.addEventListener("click",()=>{
-    selectedTime=Number(button.dataset.time);
-    document.querySelectorAll("[data-time]").forEach(b=>b.classList.remove("active"));
-    button.classList.add("active");
-    document.getElementById("frameLabel").textContent=
-      selectedTime===60?"1 MIN":selectedTime+" SEC";
-  });
-});
-
-document.getElementById("buyBtn").addEventListener("click",()=>{
-  document.getElementById("tradeMessage").textContent=
-    "DEMO BUY/CALL selected · "+currentMarket.name+" · "+selectedTime+" sec. বাস্তব ট্রেড হয়নি।";
-});
-document.getElementById("sellBtn").addEventListener("click",()=>{
-  document.getElementById("tradeMessage").textContent=
-    "DEMO SELL/PUT selected · "+currentMarket.name+" · "+selectedTime+" sec. বাস্তব ট্রেড হয়নি।";
-});
-
-window.addEventListener("resize",drawChart);
-fillMarkets();
-setInterval(addCandle,1500);
+createMarkets();
 </script>
 </body>
 </html>
