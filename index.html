@@ -5,216 +5,425 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MD REMON TRADING BOT</title>
+
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;
- font-family:Arial,sans-serif;
- color:white;
- min-height:100vh;
- background:
- linear-gradient(rgba(3,8,20,.83),rgba(3,8,20,.91)),
- url('./background.png') center center/cover fixed no-repeat;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-.container{max-width:950px;margin:auto;padding:18px}
-.card{
- background:rgba(5,13,30,.88);
- border:1px solid #1c9baf;
- border-radius:18px;
- padding:20px;
- margin:15px 0;
- box-shadow:0 0 20px #00bcd455;
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  font-family: Arial, sans-serif;
+  color: white;
+  background: transparent;
 }
-h1{text-align:center;color:#ffd34e;margin:8px}
-h2{color:#36e0e8}
-.subtitle{text-align:center;color:#bbb}
-input,select,button{
- width:100%;padding:14px;margin:8px 0;
- border-radius:10px;border:1px solid #426078;
- background:#101d32;color:white;font-size:16px;
+
+body {
+  min-height: 100vh;
+  background-image: url("./background.png");
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  text-shadow: 0 2px 5px #000, 0 0 8px #000;
 }
-button{background:#00a9a9;color:white;font-weight:bold;border:0}
-button:active{transform:scale(.98)}
-.hidden{display:none}
-.signal{
- text-align:center;padding:25px;border-radius:15px;
- background:#101d32;margin-top:15px;
- border:1px solid #3c637e;
+
+.page {
+  min-height: 100vh;
+  padding: 20px 14px 35px;
+  background: transparent !important;
 }
-.signal strong{font-size:38px;display:block;margin:10px}
-.call{color:#00ff88}
-.put{color:#ff4d64}
-.wait{color:#ffd34e}
-.timer{text-align:center;font-size:28px;color:#ffd34e}
-.market-info{color:#9fb6d0;font-size:13px}
-#chart{
- width:100%;height:180px;background:#081326;
- border-radius:12px;border:1px solid #24415c;
+
+h1 {
+  text-align: center;
+  color: #ffe66d;
+  font-size: 25px;
+  margin: 12px 0 8px;
+  text-shadow: 0 2px 8px black;
 }
-.small{text-align:center;color:#9db2c8;font-size:12px}
+
+.subtitle {
+  text-align: center;
+  color: white;
+  margin-bottom: 25px;
+  font-size: 13px;
+}
+
+.panel, .login, .signal-box, .result-box {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 12px 0;
+  margin: 12px auto;
+  max-width: 500px;
+}
+
+label {
+  display: block;
+  margin: 14px 0 7px;
+  font-weight: bold;
+  color: #ffe66d;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 13px;
+  border-radius: 9px;
+  border: 1px solid rgba(255,255,255,.85);
+  background: transparent !important;
+  color: white;
+  font-size: 16px;
+  outline: none;
+  text-shadow: 0 2px 5px black;
+}
+
+input::placeholder {
+  color: #eee;
+}
+
+select option {
+  background: #222;
+  color: white;
+}
+
+button {
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 14px;
+  color: #fff;
+}
+
+button:active {
+  transform: scale(.98);
+}
+
+.login-btn {
+  border: 2px solid #ffe66d;
+  color: #ffe66d;
+}
+
+.generate-btn {
+  border: 2px solid #00ff9d;
+  color: #00ff9d;
+  font-size: 18px;
+}
+
+.logout-btn {
+  border-color: #ff7777;
+  color: #ffaaaa;
+}
+
+#dashboard {
+  display: none;
+}
+
+.market-list {
+  display: none;
+  max-height: 190px;
+  overflow-y: auto;
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: 8px;
+  margin-top: 5px;
+  background: transparent;
+}
+
+.market-item {
+  padding: 11px;
+  border-bottom: 1px solid rgba(255,255,255,.35);
+  cursor: pointer;
+  color: white;
+  text-shadow: 0 2px 5px black;
+}
+
+.market-item:active {
+  color: #ffe66d;
+}
+
+.status {
+  text-align: center;
+  margin: 18px 0;
+  color: #ffe66d;
+  font-weight: bold;
+}
+
+#countdown {
+  text-align: center;
+  font-size: 42px;
+  font-weight: bold;
+  color: #ffe66d;
+  margin: 15px;
+}
+
+#signal {
+  text-align: center;
+  font-size: 42px;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.up {
+  color: #00ff83;
+}
+
+.down {
+  color: #ff5555;
+}
+
+.small {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 18px;
+  color: white;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  body {
+    background-attachment: scroll;
+  }
+  .page {
+    padding-top: 15px;
+  }
+}
 </style>
 </head>
+
 <body>
-<div class="container">
+<div class="page">
 
-<!-- LOGIN -->
-<div id="login" class="card">
- <h1>👑 MD REMON</h1>
- <p class="subtitle">TRADING BOT LOGIN</p>
- <input id="username" placeholder="Enter Username">
- <input id="password" type="password" placeholder="Enter Password">
- <button onclick="loginNow()">LOGIN</button>
- <p id="loginError" class="small"></p>
-</div>
+  <h1>MD REMON TRADING BOT</h1>
+  <div class="subtitle">SMART SIGNAL DASHBOARD</div>
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="hidden">
- <h1>👑 MD REMON TRADING BOT</h1>
- <p class="subtitle">SMART SIGNAL DASHBOARD</p>
+  <!-- LOGIN -->
+  <div class="login" id="login">
+    <label>Username</label>
+    <input id="username" type="text" placeholder="Enter username">
 
- <div class="card">
-  <h2>📊 Select Market</h2>
-  <select id="market">
-   <option>USD/INR (OTC)</option>
-   <option>USD/BRL (OTC)</option>
-   <option>USD/NGN (OTC)</option>
-   <option>USD/PHP (OTC)</option>
-   <option>CAD/JPY</option>
-   <option>NZD/JPY (OTC)</option>
-   <option>EUR/USD</option>
-   <option>AUD/JPY</option>
-   <option>EUR/GBP</option>
-   <option>USD/BDT (OTC)</option>
-   <option>USD/MXN (OTC)</option>
-   <option>USD/PKR (OTC)</option>
-   <option>GBP/USD</option>
-   <option>NZD/USD (OTC)</option>
-   <option>USD/COP (OTC)</option>
-   <option>EUR/JPY</option>
-   <option>GBP/CAD</option>
-   <option>USD/JPY</option>
-   <option>EUR/AUD</option>
-   <option>GBP/JPY</option>
-   <option>GBP/AUD</option>
-   <option>AUD/USD</option>
-   <option>USD/DZD (OTC)</option>
-   <option>EUR/NZD (OTC)</option>
-   <option>AUD/CAD</option>
-   <option>CAD/CHF (OTC)</option>
-   <option>NZD/CAD (OTC)</option>
-   <option>NZD/CHF (OTC)</option>
-   <option>USD/ARS (OTC)</option>
-   <option>USD/EGP (OTC)</option>
-   <option>USD/IDR (OTC)</option>
-  </select>
+    <label>Password</label>
+    <input id="password" type="password" placeholder="Enter password">
 
-  <h2>⏱️ Trade Duration</h2>
-  <select id="duration">
-   <option value="5">5 Seconds</option>
-   <option value="15">15 Seconds</option>
-   <option value="30">30 Seconds</option>
-   <option value="60">1 Minute</option>
-   <option value="300">5 Minutes</option>
-  </select>
-
-  <button onclick="generateSignal()">⚡ GENERATE SIGNAL</button>
-
-  <div class="signal">
-   <div class="market-info" id="selectedMarket">SELECT A MARKET</div>
-   <div class="timer" id="countdown">10</div>
-   <p id="status">Press Generate Signal</p>
-   <strong id="signalText" class="wait">WAIT</strong>
-   <p id="signalDuration">Duration: --</p>
+    <button class="login-btn" onclick="login()">LOGIN</button>
+    <div class="status" id="loginStatus"></div>
   </div>
- </div>
 
- <div class="card">
-  <h2>📈 Candlestick Chart</h2>
-  <canvas id="chart"></canvas>
-  <p class="small">Illustrative candles — not live market prices.</p>
- </div>
+  <!-- DASHBOARD -->
+  <div id="dashboard">
 
- <div class="card">
-  <h2>⚠️ Important</h2>
-  <p class="small">
-   This version generates illustrative sample signals.
-   It is not connected to Quotex or a verified live market feed.
-   Signals are not guaranteed to be accurate or profitable.
-   BUY / SELL buttons do not place real trades.
-  </p>
-  <button onclick="logout()">LOG OUT</button>
- </div>
-</div>
+    <div class="panel">
+      <label>SEARCH MARKET</label>
+      <input
+        id="marketSearch"
+        type="text"
+        placeholder="Search market..."
+        autocomplete="off"
+        onfocus="showMarkets()"
+        oninput="filterMarkets()"
+      >
+      <div class="market-list" id="marketList"></div>
+
+      <div class="status">
+        Selected Market: <span id="selectedMarket">None</span>
+      </div>
+
+      <label>TRADE DURATION</label>
+      <select id="duration">
+        <option value="5">5 Seconds</option>
+        <option value="10">10 Seconds</option>
+        <option value="15">15 Seconds</option>
+        <option value="30">30 Seconds</option>
+        <option value="60">1 Minute</option>
+        <option value="300">5 Minutes</option>
+      </select>
+
+      <button class="generate-btn" id="generateBtn" onclick="generateSignal()">
+        GENERATE SIGNAL
+      </button>
+    </div>
+
+    <div class="signal-box">
+      <div class="status" id="status">READY FOR SIGNAL</div>
+      <div id="countdown"></div>
+      <div id="signal"></div>
+      <div class="status" id="signalMarket"></div>
+      <div class="status" id="signalDuration"></div>
+    </div>
+
+    <div class="small">
+      MD REMON TRADING BOT
+    </div>
+
+    <button class="logout-btn" onclick="logout()">LOGOUT</button>
+  </div>
+
+  <div class="small">
+    For demonstration only. Signals are random and are not live market predictions.
+  </div>
+
 </div>
 
 <script>
-function loginNow(){
- const u=document.getElementById("username").value.trim();
- const p=document.getElementById("password").value;
- if(u==="mdremon" && p==="mdremon"){
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-  drawChart();
- }else{
-  document.getElementById("loginError").textContent="Wrong username or password";
- }
-}
-function logout(){
- document.getElementById("dashboard").classList.add("hidden");
- document.getElementById("login").classList.remove("hidden");
- document.getElementById("password").value="";
-}
-let running=false;
-function generateSignal(){
- if(running)return;
- running=true;
- let count=10;
- const market=document.getElementById("market").value;
- const duration=document.getElementById("duration").value;
- const text=document.getElementById("signalText");
- document.getElementById("selectedMarket").textContent=market;
- document.getElementById("signalDuration").textContent="Duration: "+duration+" seconds";
- text.textContent="WAIT";
- text.className="wait";
- document.getElementById("status").textContent="Preparing sample signal...";
- document.getElementById("countdown").textContent=count;
- const interval=setInterval(()=>{
-  count--;
-  document.getElementById("countdown").textContent=count;
-  if(count<=0){
-   clearInterval(interval);
-   const result=Math.random()<0.5?"CALL":"PUT";
-   text.textContent=result;
-   text.className=result==="CALL"?"call":"put";
-   document.getElementById("status").textContent="Sample signal generated";
-   running=false;
+const markets = [
+  "USD/INR (OTC)",
+  "USD/BRL (OTC)",
+  "USD/NGN (OTC)",
+  "USD/PHP (OTC)",
+  "CAD/JPY",
+  "NZD/JPY (OTC)",
+  "EUR/USD",
+  "AUD/JPY",
+  "EUR/GBP",
+  "USD/BDT (OTC)",
+  "USD/MXN (OTC)",
+  "USD/PKR (OTC)",
+  "GBP/USD",
+  "NZD/USD (OTC)",
+  "USD/COP (OTC)",
+  "EUR/JPY"
+];
+
+let selected = "";
+let countdownTimer = null;
+
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+
+  if (user === "mdremon" && pass === "mdremon") {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("loginStatus").textContent = "";
+  } else {
+    document.getElementById("loginStatus").textContent =
+      "Wrong username or password!";
   }
- },1000);
 }
-function drawChart(){
- const canvas=document.getElementById("chart");
- const ctx=canvas.getContext("2d");
- const w=canvas.width=canvas.clientWidth*2;
- const h=canvas.height=360;
- ctx.clearRect(0,0,w,h);
- let price=180;
- for(let i=0;i<35;i++){
-  let open=price;
-  let close=open+(Math.random()-.5)*35;
-  let high=Math.max(open,close)+Math.random()*15;
-  let low=Math.min(open,close)-Math.random()*15;
-  let x=12+i*22;
-  let green=close>=open;
-  ctx.strokeStyle=green?"#00ed91":"#ff5268";
-  ctx.fillStyle=ctx.strokeStyle;
-  ctx.lineWidth=2;
-  ctx.beginPath();
-  ctx.moveTo(x+7,h-high);
-  ctx.lineTo(x+7,h-low);
-  ctx.stroke();
-  ctx.fillRect(x,h-Math.max(open,close),14,Math.max(3,Math.abs(close-open)));
-  price=close;
- }
+
+function logout() {
+  clearInterval(countdownTimer);
+  document.getElementById("dashboard").style.display = "none";
+  document.getElementById("login").style.display = "block";
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+  resetSignal();
+}
+
+function showMarkets() {
+  const list = document.getElementById("marketList");
+  list.style.display = "block";
+  renderMarkets(markets);
+}
+
+function renderMarkets(items) {
+  const list = document.getElementById("marketList");
+  list.innerHTML = "";
+
+  items.forEach(market => {
+    const item = document.createElement("div");
+    item.className = "market-item";
+    item.textContent = market;
+
+    item.onclick = function() {
+      selected = market;
+      document.getElementById("marketSearch").value = market;
+      document.getElementById("selectedMarket").textContent = market;
+      list.style.display = "none";
+    };
+
+    list.appendChild(item);
+  });
+}
+
+function filterMarkets() {
+  const query = document.getElementById("marketSearch")
+    .value.toLowerCase();
+
+  document.getElementById("marketList").style.display = "block";
+
+  const filtered = markets.filter(market =>
+    market.toLowerCase().includes(query)
+  );
+
+  renderMarkets(filtered);
+}
+
+document.addEventListener("click", function(event) {
+  const search = document.getElementById("marketSearch");
+  const list = document.getElementById("marketList");
+
+  if (event.target !== search && !list.contains(event.target)) {
+    list.style.display = "none";
+  }
+});
+
+function resetSignal() {
+  document.getElementById("status").textContent = "READY FOR SIGNAL";
+  document.getElementById("countdown").textContent = "";
+  document.getElementById("signal").textContent = "";
+  document.getElementById("signal").className = "";
+  document.getElementById("signalMarket").textContent = "";
+  document.getElementById("signalDuration").textContent = "";
+  document.getElementById("generateBtn").disabled = false;
+}
+
+function generateSignal() {
+  if (!selected) {
+    alert("Please select a market first!");
+    return;
+  }
+
+  clearInterval(countdownTimer);
+
+  const duration = document.getElementById("duration").value;
+  let count = 10;
+
+  document.getElementById("generateBtn").disabled = true;
+  document.getElementById("status").textContent = "ANALYZING...";
+  document.getElementById("signal").textContent = "";
+  document.getElementById("signalMarket").textContent =
+    "Market: " + selected;
+  document.getElementById("signalDuration").textContent =
+    "Duration: " + formatDuration(duration);
+  document.getElementById("countdown").textContent = count;
+
+  countdownTimer = setInterval(() => {
+    count--;
+    document.getElementById("countdown").textContent = count;
+
+    if (count <= 0) {
+      clearInterval(countdownTimer);
+      showSignal();
+    }
+  }, 1000);
+}
+
+function showSignal() {
+  const isUp = Math.random() >= 0.5;
+  const signal = document.getElementById("signal");
+
+  if (isUp) {
+    signal.textContent = "UP / BUY";
+    signal.className = "up";
+  } else {
+    signal.textContent = "DOWN / SELL";
+    signal.className = "down";
+  }
+
+  document.getElementById("status").textContent = "DEMO SIGNAL GENERATED";
+  document.getElementById("countdown").textContent = "✓";
+  document.getElementById("generateBtn").disabled = false;
+}
+
+function formatDuration(value) {
+  if (value === "60") return "1 Minute";
+  if (value === "300") return "5 Minutes";
+  return value + " Seconds";
 }
 </script>
 </body>
