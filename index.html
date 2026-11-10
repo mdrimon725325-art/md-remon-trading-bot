@@ -5,333 +5,217 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MD REMON TRADING BOT</title>
-
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;min-height:100vh;color:white;
- font-family:Arial,sans-serif;background:#050914;
+ margin:0;
+ font-family:Arial,sans-serif;
+ color:white;
+ min-height:100vh;
+ background:
+ linear-gradient(rgba(3,8,20,.83),rgba(3,8,20,.91)),
+ url('./background.png') center center/cover fixed no-repeat;
 }
-body:before{
- content:"";position:fixed;inset:0;z-index:-2;
- background-image:url("./background.png");
- background-position:center;
- background-size:cover;
- background-repeat:no-repeat;
-}
-body:after{
- content:"";position:fixed;inset:0;z-index:-1;
- background:linear-gradient(180deg,rgba(3,8,18,.78),rgba(3,8,18,.94));
-}
-.container{max-width:560px;margin:auto;padding:14px}
-header{text-align:center;padding:18px 5px}
-.logo{font-size:40px}
-h1{font-size:24px;color:#ffd36b;margin:8px 0}
-.subtitle{font-size:11px;letter-spacing:3px;color:#c3ccdc}
+.container{max-width:950px;margin:auto;padding:18px}
 .card{
- background:rgba(9,19,34,.92);
- border:1px solid #85652f;border-radius:17px;
- padding:17px;margin:14px 0;
- box-shadow:0 8px 25px #0009;
- backdrop-filter:blur(7px)
+ background:rgba(5,13,30,.88);
+ border:1px solid #1c9baf;
+ border-radius:18px;
+ padding:20px;
+ margin:15px 0;
+ box-shadow:0 0 20px #00bcd455;
 }
-h2{text-align:center;color:#ffd36b;font-size:17px;margin:5px 0 15px}
-input,button{
- width:100%;padding:14px;margin:7px 0;
- border-radius:11px;font-size:15px
+h1{text-align:center;color:#ffd34e;margin:8px}
+h2{color:#36e0e8}
+.subtitle{text-align:center;color:#bbb}
+input,select,button{
+ width:100%;padding:14px;margin:8px 0;
+ border-radius:10px;border:1px solid #426078;
+ background:#101d32;color:white;font-size:16px;
 }
-input{background:#101d2e;border:1px solid #46546b;color:white}
-button{
- border:0;background:linear-gradient(100deg,#bd8126,#ffe19a);
- color:#211504;font-weight:bold;cursor:pointer
-}
-button:disabled{opacity:.5}
+button{background:#00a9a9;color:white;font-weight:bold;border:0}
+button:active{transform:scale(.98)}
 .hidden{display:none}
-.market-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.market{
- background:linear-gradient(145deg,#17263b,#0b1423);
- border:1px solid #46546b;border-radius:11px;
- padding:13px 5px;text-align:center;font-size:13px;
- cursor:pointer
+.signal{
+ text-align:center;padding:25px;border-radius:15px;
+ background:#101d32;margin-top:15px;
+ border:1px solid #3c637e;
 }
-.market.selected{
- border:2px solid #ffd36b;background:#49351b;
- color:#ffe5a5;box-shadow:0 0 12px #d99b3d66
+.signal strong{font-size:38px;display:block;margin:10px}
+.call{color:#00ff88}
+.put{color:#ff4d64}
+.wait{color:#ffd34e}
+.timer{text-align:center;font-size:28px;color:#ffd34e}
+.market-info{color:#9fb6d0;font-size:13px}
+#chart{
+ width:100%;height:180px;background:#081326;
+ border-radius:12px;border:1px solid #24415c;
 }
-.duration-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.duration{
- padding:12px 3px;text-align:center;
- border:1px solid #46546b;border-radius:10px;
- background:#101d2e;font-size:13px;cursor:pointer
-}
-.duration.selected{border:2px solid #ffd36b;color:#ffdf91;background:#49351a}
-.info{text-align:center;color:#c0ccdc;font-size:13px}
-#timer{text-align:center;font-size:58px;font-weight:bold;color:#ffd36b;margin:15px}
-#signal{
- text-align:center;font-size:36px;font-weight:bold;
- padding:20px;border-radius:14px;background:#081321;
- border:1px solid #53647b;margin:12px 0
-}
-.call{color:#16e5a0;text-shadow:0 0 18px #16e5a0}
-.put{color:#ff5268;text-shadow:0 0 18px #ff5268}
-.wait{color:#ffc857}
-.small{font-size:11px;line-height:1.7;color:#a9b9cb}
-footer{text-align:center;color:#9aa8ba;font-size:11px;padding:18px}
+.small{text-align:center;color:#9db2c8;font-size:12px}
 </style>
 </head>
-
 <body>
 <div class="container">
 
-<header>
- <div class="logo">🦁</div>
- <h1>MD REMON TRADING BOT</h1>
- <div class="subtitle">PREMIUM OTC SIGNAL SYSTEM</div>
-</header>
-
 <!-- LOGIN -->
-<div id="loginPage">
- <div class="card">
-  <h2>🔐 MEMBER LOGIN</h2>
-  <p class="info">Welcome to MD REMON</p>
-  <input id="username" placeholder="Enter Username">
-  <input id="password" type="password" placeholder="Enter Password">
-  <button onclick="login()">LOGIN NOW</button>
-  <p id="loginError" class="small"></p>
- </div>
+<div id="login" class="card">
+ <h1>👑 MD REMON</h1>
+ <p class="subtitle">TRADING BOT LOGIN</p>
+ <input id="username" placeholder="Enter Username">
+ <input id="password" type="password" placeholder="Enter Password">
+ <button onclick="loginNow()">LOGIN</button>
+ <p id="loginError" class="small"></p>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
+ <h1>👑 MD REMON TRADING BOT</h1>
+ <p class="subtitle">SMART SIGNAL DASHBOARD</p>
 
  <div class="card">
-  <h2>📊 SELECT TRADE MARKET</h2>
-  <input id="marketSearch" placeholder="Search market..." oninput="renderMarkets()">
-  <div class="market-grid" id="marketGrid"></div>
-  <p class="info" id="selectedMarket">Select your market</p>
+  <h2>📊 Select Market</h2>
+  <select id="market">
+   <option>USD/INR (OTC)</option>
+   <option>USD/BRL (OTC)</option>
+   <option>USD/NGN (OTC)</option>
+   <option>USD/PHP (OTC)</option>
+   <option>CAD/JPY</option>
+   <option>NZD/JPY (OTC)</option>
+   <option>EUR/USD</option>
+   <option>AUD/JPY</option>
+   <option>EUR/GBP</option>
+   <option>USD/BDT (OTC)</option>
+   <option>USD/MXN (OTC)</option>
+   <option>USD/PKR (OTC)</option>
+   <option>GBP/USD</option>
+   <option>NZD/USD (OTC)</option>
+   <option>USD/COP (OTC)</option>
+   <option>EUR/JPY</option>
+   <option>GBP/CAD</option>
+   <option>USD/JPY</option>
+   <option>EUR/AUD</option>
+   <option>GBP/JPY</option>
+   <option>GBP/AUD</option>
+   <option>AUD/USD</option>
+   <option>USD/DZD (OTC)</option>
+   <option>EUR/NZD (OTC)</option>
+   <option>AUD/CAD</option>
+   <option>CAD/CHF (OTC)</option>
+   <option>NZD/CAD (OTC)</option>
+   <option>NZD/CHF (OTC)</option>
+   <option>USD/ARS (OTC)</option>
+   <option>USD/EGP (OTC)</option>
+   <option>USD/IDR (OTC)</option>
+  </select>
+
+  <h2>⏱️ Trade Duration</h2>
+  <select id="duration">
+   <option value="5">5 Seconds</option>
+   <option value="15">15 Seconds</option>
+   <option value="30">30 Seconds</option>
+   <option value="60">1 Minute</option>
+   <option value="300">5 Minutes</option>
+  </select>
+
+  <button onclick="generateSignal()">⚡ GENERATE SIGNAL</button>
+
+  <div class="signal">
+   <div class="market-info" id="selectedMarket">SELECT A MARKET</div>
+   <div class="timer" id="countdown">10</div>
+   <p id="status">Press Generate Signal</p>
+   <strong id="signalText" class="wait">WAIT</strong>
+   <p id="signalDuration">Duration: --</p>
+  </div>
  </div>
 
  <div class="card">
-  <h2>⏱ SELECT TRADE TIME</h2>
-  <div class="duration-grid" id="durationGrid"></div>
-  <p class="info" id="selectedDuration">Select duration</p>
+  <h2>📈 Candlestick Chart</h2>
+  <canvas id="chart"></canvas>
+  <p class="small">Illustrative candles — not live market prices.</p>
  </div>
 
  <div class="card">
-  <h2>⚡ SIGNAL GENERATOR</h2>
-  <button id="signalButton" onclick="startSignal()">GET SIGNAL</button>
-  <div id="timer">10</div>
-  <div id="signal" class="wait">WAIT</div>
-  <p class="info" id="signalMarket">Market: —</p>
-  <p class="info" id="signalDuration">Trade Time: —</p>
-  <p class="info" id="signalTime">Time: —</p>
- </div>
-
- <div class="card">
-  <h2>🦁 MD REMON VIP</h2>
+  <h2>⚠️ Important</h2>
   <p class="small">
-   1. Select a market.<br>
-   2. Select trade duration.<br>
-   3. Press GET SIGNAL.<br>
-   4. Wait for the 10-second countdown.<br>
-   5. View the result.
+   This version generates illustrative sample signals.
+   It is not connected to Quotex or a verified live market feed.
+   Signals are not guaranteed to be accurate or profitable.
+   BUY / SELL buttons do not place real trades.
   </p>
+  <button onclick="logout()">LOG OUT</button>
  </div>
-
- <button onclick="logout()" style="background:#29394f;color:white">LOGOUT</button>
 </div>
-
-<footer>MD REMON TRADING BOT © 2026</footer>
 </div>
 
 <script>
-const markets=[
-"USD/INR (OTC)",
-"USD/BRL (OTC)",
-"USD/NGN (OTC)",
-"USD/PHP (OTC)",
-"CAD/JPY",
-"NZD/JPY (OTC)",
-"EUR/USD",
-"AUD/JPY",
-"EUR/GBP",
-"USD/BDT (OTC)",
-"USD/MXN (OTC)",
-"USD/PKR (OTC)",
-"GBP/USD",
-"NZD/USD (OTC)",
-"USD/COP (OTC)",
-"EUR/JPY",
-"GBP/CAD",
-"USD/JPY",
-"EUR/AUD",
-"GBP/JPY",
-"GBP/AUD",
-"AUD/USD",
-"USD/DZD (OTC)",
-"EUR/NZD (OTC)",
-"AUD/CAD",
-"CAD/CHF (OTC)",
-"NZD/CAD (OTC)",
-"NZD/CHF (OTC)",
-"USD/ARS (OTC)",
-"USD/EGP (OTC)",
-"USD/IDR (OTC)",
-"EUR/CAD"
-];
-
-const durations=[
-"5 Seconds","15 Seconds","30 Seconds",
-"1 Minute","5 Minutes"
-];
-
-let selected="";
-let selectedTime="";
-let countdown=null;
-let busy=false;
-
-function login(){
+function loginNow(){
  const u=document.getElementById("username").value.trim();
  const p=document.getElementById("password").value;
-
  if(u==="mdremon" && p==="mdremon"){
-  document.getElementById("loginPage").classList.add("hidden");
+  document.getElementById("login").classList.add("hidden");
   document.getElementById("dashboard").classList.remove("hidden");
-  document.getElementById("loginError").textContent="";
+  drawChart();
  }else{
-  document.getElementById("loginError").textContent=
-  "Wrong Username or Password!";
+  document.getElementById("loginError").textContent="Wrong username or password";
  }
 }
-
 function logout(){
- resetSignal();
- selected="";
- selectedTime="";
  document.getElementById("dashboard").classList.add("hidden");
- document.getElementById("loginPage").classList.remove("hidden");
- document.getElementById("username").value="";
+ document.getElementById("login").classList.remove("hidden");
  document.getElementById("password").value="";
- document.getElementById("marketSearch").value="";
- document.querySelectorAll(".market,.duration").forEach(
-  x=>x.classList.remove("selected")
- );
- document.getElementById("selectedMarket").textContent="Select your market";
- document.getElementById("selectedDuration").textContent="Select duration";
 }
-
-function renderMarkets(){
- const grid=document.getElementById("marketGrid");
- const query=document.getElementById("marketSearch").value.toLowerCase();
- grid.innerHTML="";
-
- markets.filter(name=>name.toLowerCase().includes(query)).forEach(name=>{
-  const item=document.createElement("div");
-  item.className="market"+(selected===name?" selected":"");
-  item.textContent=name;
-
-  item.onclick=()=>{
-   if(busy)return;
-   selected=name;
-   renderMarkets();
-   document.getElementById("selectedMarket").textContent="Selected: "+name;
-   document.getElementById("signalMarket").textContent="Market: "+name;
-  };
-
-  grid.appendChild(item);
- });
-}
-
-function createDurations(){
- const grid=document.getElementById("durationGrid");
-
- durations.forEach(time=>{
-  const item=document.createElement("div");
-  item.className="duration";
-  item.textContent=time;
-
-  item.onclick=()=>{
-   if(busy)return;
-   selectedTime=time;
-   document.querySelectorAll(".duration").forEach(
-    x=>x.classList.remove("selected")
-   );
-   item.classList.add("selected");
-   document.getElementById("selectedDuration").textContent="Selected: "+time;
-   document.getElementById("signalDuration").textContent="Trade Time: "+time;
-  };
-
-  grid.appendChild(item);
- });
-}
-
-function startSignal(){
- if(busy)return;
-
- if(!selected){
-  alert("Please select a market first!");
-  return;
- }
- if(!selectedTime){
-  alert("Please select trade time first!");
-  return;
- }
-
- busy=true;
- let seconds=10;
- const button=document.getElementById("signalButton");
-
- button.disabled=true;
- button.textContent="ANALYZING...";
- document.getElementById("signal").textContent="ANALYZING...";
- document.getElementById("signal").className="wait";
- document.getElementById("timer").textContent=seconds;
-
- countdown=setInterval(()=>{
-  seconds--;
-  document.getElementById("timer").textContent=seconds;
-
-  if(seconds<=0){
-   clearInterval(countdown);
-   countdown=null;
-   showSignal();
+let running=false;
+function generateSignal(){
+ if(running)return;
+ running=true;
+ let count=10;
+ const market=document.getElementById("market").value;
+ const duration=document.getElementById("duration").value;
+ const text=document.getElementById("signalText");
+ document.getElementById("selectedMarket").textContent=market;
+ document.getElementById("signalDuration").textContent="Duration: "+duration+" seconds";
+ text.textContent="WAIT";
+ text.className="wait";
+ document.getElementById("status").textContent="Preparing sample signal...";
+ document.getElementById("countdown").textContent=count;
+ const interval=setInterval(()=>{
+  count--;
+  document.getElementById("countdown").textContent=count;
+  if(count<=0){
+   clearInterval(interval);
+   const result=Math.random()<0.5?"CALL":"PUT";
+   text.textContent=result;
+   text.className=result==="CALL"?"call":"put";
+   document.getElementById("status").textContent="Sample signal generated";
+   running=false;
   }
  },1000);
 }
-
-function showSignal(){
- // পরীক্ষামূলক র‍্যান্ডম ফলাফল; লাইভ মার্কেট বিশ্লেষণ নয়
- const results=["CALL","PUT","WAIT"];
- const result=results[Math.floor(Math.random()*results.length)];
-
- const signal=document.getElementById("signal");
- signal.textContent=result;
- signal.className=result.toLowerCase();
-
- document.getElementById("timer").textContent="00";
- document.getElementById("signalMarket").textContent="Market: "+selected;
- document.getElementById("signalDuration").textContent="Trade Time: "+selectedTime;
- document.getElementById("signalTime").textContent=
-  "Time: "+new Date().toLocaleTimeString();
-
- document.getElementById("signalButton").disabled=false;
- document.getElementById("signalButton").textContent="GET NEW SIGNAL";
- busy=false;
+function drawChart(){
+ const canvas=document.getElementById("chart");
+ const ctx=canvas.getContext("2d");
+ const w=canvas.width=canvas.clientWidth*2;
+ const h=canvas.height=360;
+ ctx.clearRect(0,0,w,h);
+ let price=180;
+ for(let i=0;i<35;i++){
+  let open=price;
+  let close=open+(Math.random()-.5)*35;
+  let high=Math.max(open,close)+Math.random()*15;
+  let low=Math.min(open,close)-Math.random()*15;
+  let x=12+i*22;
+  let green=close>=open;
+  ctx.strokeStyle=green?"#00ed91":"#ff5268";
+  ctx.fillStyle=ctx.strokeStyle;
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(x+7,h-high);
+  ctx.lineTo(x+7,h-low);
+  ctx.stroke();
+  ctx.fillRect(x,h-Math.max(open,close),14,Math.max(3,Math.abs(close-open)));
+  price=close;
+ }
 }
-
-function resetSignal(){
- if(countdown){clearInterval(countdown);countdown=null;}
- busy=false;
- document.getElementById("timer").textContent="10";
- document.getElementById("signal").textContent="WAIT";
- document.getElementById("signal").className="wait";
- document.getElementById("signalButton").disabled=false;
- document.getElementById("signalButton").textContent="GET SIGNAL";
- document.getElementById("signalTime").textContent="Time: —";
-}
-
-renderMarkets();
-createDurations();
 </script>
 </body>
 </html>
